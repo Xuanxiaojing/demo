@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			ul,li{
+				padding: 0;
+				margin: 0;
+				list-style: none;
+			}
+			em{
+				font-style: normal;
+			}
+			b{
+				font-weight: normal;
+			}
+			div,ul{
+				box-sizing: border-box;
+			}
+			p{
+				margin: 0;
+			}
+			.fl{
+				float: left;
+			}
+			.clearfix:after{
+				content:"";
+				display:block;
+				clear:both;
+				height:0;
+				overflow:hidden;
+			}
+			.clearfix{
+				zoom:1;	
+			}
+			#wrap{
+				width:764px;
+				height: 800px;
+				padding: 117px 0 0 145px;
+				background: url(images/bg.png) no-repeat;
+				margin:100px auto;
+			}
+			.box{
+				width:479px;
+				height: 591px;
+				background: url(images/bg2.png) no-repeat;
+			}
+			.logo{
+				height: 98px;
+				background: url(images/logo.png) no-repeat 160px 52px;
+			}
+			.list{
+				padding:41px 0 0 44px;
+			}
+			.list li{
+				margin-bottom: 20px;
+			}
+			.list button{
+				float: left;
+				width:44px;
+				height: 36px;
+				background: url(images/btn.png) no-repeat;
+				text-align: center;
+				line-height: 36px;
+				border-style: none;
+				margin-right: 10px;
+				font-size: 30px;
+				color: #fff;
+				font-weight: bold;
+			}
+			.list span{
+				float: left;
+			}
+			.quantity{
+				width:44px;
+				height: 36px;
+				background: #fff;
+				border-radius: 8px;
+				margin-right: 10px;
+				text-align: center;
+				line-height: 36px;
+			}
+			.price{
+				width:214px;
+				height: 36px;
+				text-align: center;
+				line-height: 36px;
+				color: #919191;
+				background: #171818;
+				margin-left: 5px;
+			}
+			.price b{
+				color: #fff;
+			}
+			.bot{
+				height: 156px;
+			}
+			.bot span{
+				display: inline-block;
+				padding: 8px 15px;
+				color:#000;
+				background: #fff;
+				border-radius: 6px;
+				margin:0 20px 0 10px;
+			}
+			.bot{
+				color: #919191;
+				padding: 34px 0 0 45px;
+			}
+			.bot p{
+				margin:0 20px 15px 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<div class="box">
+				<p class="logo"></p>
+				<ul class="list">
+					<li class="lis clearfix">
+						<button class="sub">-</button>
+						<span class="quantity">0</span>
+						<button class="add">+</button>
+						<span class="price">
+							    单价：<em>12.5</em>元
+							    小计：<b>0</b>元
+						</span>
+					</li>
+					<li class="lis clearfix">
+						<button class="sub">-</button>
+						<span class="quantity">0</span>
+						<button class="add">+</button>
+						<span class="price">
+							    单价：<em>10.5</em>元
+							    小计：<b>0</b>元
+						</span>
+					</li>
+					<li class="lis clearfix">
+						<button class="sub">-</button>
+						<span class="quantity">0</span>
+						<button class="add">+</button>
+						<span class="price">
+							    单价：<em>8.5</em>元
+							    小计：<b>0</b>元
+						</span>
+					</li>
+					<li class="lis clearfix">
+						<button class="sub">-</button>
+						<span class="quantity">0</span>
+						<button class="add">+</button>
+						<span class="price">
+							    单价：<em>8</em>元
+							    小计：<b>0</b>元
+						</span>
+					</li>
+					<li class="lis clearfix">
+						<button class="sub">-</button>
+						<span class="quantity">0</span>
+						<button class="add">+</button>
+						<span class="price">
+							    单价：<em>14.5</em>元
+							    小计：<b>0</b>元
+						</span>
+					</li>
+				</ul>
+				<div class="bot">
+					<div class="all clearfix">
+						<p class="fl">
+							商品合计共：<span class="total">0</span>件
+						</p>
+						<p class="fl">共花费了：<span class="totalPrice">0</span>元</p>
+						
+					</div>
+					<div class="expensive">
+						其中最贵的商品单价是：<span>0</span>元
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		<script>
+			/*
+				给每一个li设置一个n
+				总数？：设置一个整体的num、只要点任何一个add按钮，就+1，只要点任何一个sub按钮，就-1
+				只要点任何一个add按钮,
+				拿到当前的每种商品的小计，加在一起
+			 */
+			var lis = document.querySelectorAll('.lis');  //获取到所有的li
+			var n = 0;    //记录商品的总数
+			var maxPrice = document.querySelector('.expensive span');
+			var sumPrice = 0;  //总价
+			/*
+			getElement(lis[0]);
+			getElement(lis[1]);
+			getElement(lis[2]);
+			getElement(lis[3]);
+			getElement(lis[4]);
+			*/
+			
+			
+			
+			function add(a,b){
+				var n = 0;
+				for( var i = 0; i < arguments.length; i++ ){
+					n += arguments[i]
+				}
+
+				//console.log(n);
+
+				return n;
+			}
+			
+			for(var i = 0; i < lis.length; i++){
+				getElement(lis[i]);
+			}
+			
+			//封装函数
+			function getElement(parent){
+				var sub = parent.querySelector('.sub');  //减号按钮
+				var quantity = parent.querySelector('.quantity');  //每一种商品的数量
+				var add = parent.querySelector('.add'); //加号按钮
+				var uPrice = parent.querySelector('.price em').innerHTML;  //商品的单价
+				var mTotal = parent.querySelector('.price b');  //每种商品的总价
+				var total = document.querySelector('.all .total');  //所有商品的总数
+				var totalPrice = document.querySelector('.all .totalPrice');  //所有商品的总价
+				var num = 0;  //记录每个商品的个数
+				//var price = uPrice.innerHTML;  //存一下商品的单价
+				
+				//点击减号按钮时
+				sub.onclick = function(){
+					
+					if(num <= 0){//如果每个商品的个数小于等于0，就不执行num--
+						return;	
+					}
+					num--;  //每个商品的个数减少1
+					quantity.innerHTML = num;  //在quantity里显示目前的数量
+					mTotal.innerHTML = parseFloat(uPrice)*num; //在小计里显示计算出的每种商品的总价
+					n--;  //商品的总数减1
+					total.innerHTML = n;  //商品总数显示在total标签里
+					//sumPrice += parseFloat(price)*num;
+					var arr1 = [];
+					arr1.push(parseFloat(uPrice)*num)
+					var sumpri = 0;
+					for(var i=0;i<arr1.length;i++){
+						sumpri += parseFloat(arr1[i]);
+					}
+//					totalPrice.innerHTML = parseFloat(uPrice)*num + parseFloat(totalPrice.innerHTML);
+					totalPrice.innerHTML = sumpri;
+					if((num != 0) && (parseFloat(uPrice) > parseFloat(maxPrice.innerHTML) )){
+//						m = parseFloat(uPrice);
+//						maxPrice.innerHTML = m;
+						maxPrice.innerHTML = parseFloat(uPrice);
+					}
+				}
+				add.onclick = function(){
+					num++;
+					quantity.innerHTML = num;
+					mTotal.innerHTML = parseFloat(uPrice)*num;
+					n++;
+					total.innerHTML = n;
+					//sumPrice += mTotal.innerHTML;
+					var arr1 = [];
+					arr1.push(parseFloat(uPrice)*num)
+					var sumpri = 0;
+					for(var i=0;i<arr1.length;i++){
+						sumpri += parseFloat(arr1[i]);
+					}
+//					totalPrice.innerHTML = parseFloat(uPrice)*num + parseFloat(totalPrice.innerHTML);
+					totalPrice.innerHTML = sumpri;
+					if((num != 0) && (parseFloat(uPrice) > parseFloat(maxPrice.innerHTML)) ){
+						//m = parseFloat(uPrice);
+						maxPrice.innerHTML = parseFloat(uPrice);
+					}
+					//maxPrice.innerHTML = m;
+				}
+				
+//				maxPrice.innerHTML = m;
+			}
+			
+//			var subs = document.querySelectorAll('.sub');
+//			console.log(subs)
+//			var adds = document.querySelectorAll('.add');
+//			var uPrices = document.querySelectorAll('.price em');
+//			var maxPrice = document.querySelector('.expensive span');
+//			console.log(maxPrice.innerHTML)
+//			for(var i = 0; i < adds.length; i++){
+//				adds[i].index = i;
+//				adds[i].onClick = false;
+//				adds[i].onclick = function(){
+//					this.onClick = true;
+//					
+//					if((parseFloat(uPrices[this.index].innerHTML))  >= parseFloat(maxPrice.innerHTML) ){
+//						maxPrice.innerHTML = parseFloat(uPrices[this.index].innerHTML);
+//					}
+//					console.log(maxPrice.innerHTML)
+//				}
+//			}
+
+
+			//totalPrice.innerHTML = 
+			
+			
+			/*
+			//第一个li
+			var sub = lis[0].querySelector('.sub');
+			var quantity = lis[0].querySelector('.quantity');
+			var add = lis[0].querySelector('.add');
+			var uPrice = lis[0].querySelector('.price em');
+			var mTotal = lis[0].querySelector('.price b');
+			var total = document.querySelector('.all .total');
+			var num = 0;  //记录每个商品的个数
+			var n = 0;  //记录商品的总数
+			var price = uPrice.innerHTML;
+			sub.onclick = function(){
+				if(num <= 0){
+					return;
+				}
+				num--;
+				quantity.innerHTML = num;
+				mTotal.innerHTML = ''+ parseFloat(price)*num + '元';
+				n--;
+				total.innerHTML = n;
+				totalPrice.innerHTML = mTotal.innerHTML;
+			}
+			add.onclick = function(){
+				num++;
+				quantity.innerHTML = num;
+				mTotal.innerHTML = ''+ parseFloat(price)*num + '元';
+				n++;
+				total.innerHTML = n;
+				totalPrice.innerHTML = mTotal.innerHTML;
+			}
+			
+			*/
+			
+			
+			
+		</script>
+		
+	</body>
+</html>
