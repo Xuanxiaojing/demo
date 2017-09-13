@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+	<div id="wrap">
+		<div id="box">
+			<div id="top" class="clearfix">
+				<span class="logo fl"></span>
+				<span class="title fl">| 总体评分</span>
+			</div>
+			<div id="content" class="clearfix">
+				<div id="star" class="fl">
+					<!--<span>
+					</span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>-->
+					<img src="images/star1.png"/>
+					<img src="images/star1.png" />
+					<img src="images/star1.png" />
+					<img src="images/star1.png" />
+					<img src="images/star1.png" />
+					
+					
+				</div>
+				<a href="" id="btn" class="fl">推荐</a>
+			</div>
+			<div id="bot">
+				<span class="icon">!</span>
+				小提示：点击星星就能打分
+			</div>
+		</div>
+	</div>
+	
+	<script src="../utils.js"></script>
+	
+	<script>
+		var arrImg = ['images/star1.png','images/star2.png','images/star3.png']
+		var arrText = ['极差','一般','不错','推荐','力推'];
+			
+		var stars = $('#star img');
+		var btn = $('#btn');  //评分结果
+		var flag = false;  //记录星星的点击状态，true为已经点击，false为没点击，不管哪个星星，一旦发生点击事件，flag就改为true
+		var prevStar = 0;  //记录上一次点击的星星的下标
+		
+		
+		for(var i=0; i<stars.length; i++){
+			stars[i].index = i;
+			
+			/*
+				移入时，
+					如果已经发生过点击事件，
+						就把所有星星的颜色清空（移出时给 上次点击的星星之前的星星（包括自身）全都重新添加颜色）
+					显示对应的评分结果
+					显示相应的颜色
+			 */
+			stars[i].onmouseover = function(){
+				if(flag){
+					for(var j=0; j<stars.length; j++){
+						stars[j].src = arrImg[0];
+					}
+				}
+				btn.style.display = 'block';
+				btn.innerHTML = arrText[this.index];
+				
+				if(this.index <= 1){
+					for(var j=0; j<=this.index; j++){
+						stars[j].src = arrImg[1];
+					}
+				}else{
+					for(var j=0; j<=this.index; j++){
+						stars[j].src = arrImg[2];
+					}
+				}
+				
+			}
+			
+			/*
+				移出时
+					如果已经发生过点击事件，
+						保留 上次点击的星星 对应的评分结果
+						把所有星星的颜色清空
+						给上次点击的星星之前的星星（包括自身）全都添加颜色
+					如果还没发生过点击事件，	
+						隐藏评分结果
+						把所有星星的颜色清空
+			 */
+			stars[i].onmouseout = function(){
+				
+				if(flag){
+					btn.style.display = 'block';
+					btn.innerHTML = arrText[prevStar];
+					for(var j=0; j<stars.length; j++){
+						stars[j].src = arrImg[0];
+					}
+					if(prevStar <= 1){
+						for(var j=0; j<=prevStar; j++){
+							stars[j].src = arrImg[1];
+						}
+					}else{
+						for(var j=0; j<=prevStar; j++){
+							stars[j].src = arrImg[2];
+						}
+					}
+					
+				}else{
+					btn.style.display = 'none';
+					for(var j=0; j<=this.index; j++){
+						stars[j].src = arrImg[0];
+					}
+				}
+				
+				
+			}
+			
+			//点击时，flag就改为true，本次点击的星星的下标赋值给prevStar
+			stars[i].onclick = function(){
+				flag = true;  //只要发生点击事件，flag就改为true
+				prevStar = this.index;
+			}
+		}
+		
+	</script>
+	
+	</body>
+</html>
