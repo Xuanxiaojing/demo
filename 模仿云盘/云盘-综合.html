@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="css/reset.css" />
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+		
+		<div class="wrap">
+			<div class="box">
+				<div id="head">
+					<div class="top clearfix">
+						<h1 class="logo fl"><img src="images/logo.png"/></h1>
+						<span class="fl title">妙味云盘</span>
+						<div class="right fr">
+							<p class="user fl">
+								<img src="images/photo.png" class="fl" />
+								<i class="fl icon-black"></i>
+							</p>
+							<span class="shu fl"></span>
+							<p class="set icon-black fl"></p>
+						</div>
+					</div>
+					
+					<div class="tools clearfix">
+						<ul class="fl tools-list">
+							<li class="fl"><i class="icon-black fl"></i><span>下载</span>
+							</li>
+							<li class="fl"><i class="icon-black fl"></i><span>分享</span>
+							</li>
+							<li class="fl" id="move"><i class="icon-black fl"></i><span>移动到</span>
+							</li>
+							<li class="fl" id="rename"><i class="icon-black fl"></i><span>重命名</span>
+							</li>
+							<li class="fl" id="del"><i class="icon-black fl"></i><span>删除</span>
+							</li>
+							<li class="fl" id="create"><i class="icon-black fl"></i><span>新建文件夹</span>
+							</li>
+							<li class="fl"><i class="icon-black fl"></i></li>
+						</ul>
+						
+						<div class="fr">
+							<p class="fl tools-show1">
+								<i class="fl"></i>
+							</p>
+							<p class="fl tools-show2">
+								<i class="icon-black i1 fl"></i>
+								<i class="icon-black i2 fl"></i>
+							</p>
+						</div>
+						
+					</div>
+				</div>
+				
+				
+				<!--主体部分-->
+				<section class="mainbody">
+					<!--主体部分的左边：树形菜单部分-->
+					<div class="tree">
+						<!--<ul class="tree-top">
+							<li>
+								<div>
+									<span class="fold"><i></i>微云</span>
+								</div>
+								<ul>
+									<li>
+										<div>
+											<span class="fold">JS课程</span>
+										</div>
+										<ul>
+											<li>
+												<span class="fold">123</span>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>-->
+					</div>
+					
+					<!--主体部分-->
+					<div class="maincont">
+						<!--右边的面包屑导航-->
+						<div class="nav-bar clearfix">
+							<span class="checkall fl"></span>
+							<div class="bread-nav fl">
+								<!--<a href="javascript">微云</a>
+								<span>我的音乐</span>-->
+							</div>
+						</div>
+						<div class="file-blank"></div>
+						<!--<div id="yj-list">
+							<span class="dl">下载</span>
+							<span class="mv">移动到</span>
+							<span class="de">删除</span>
+							<span class="rn">重命名</span>
+							<span class="sh">分享</span>
+						</div>-->
+						<!--右边的文件区域-->
+						<div class="files">
+							<!--<div class="file" data-id="${item.id}">
+								<div class="ico" data-id="${item.id}"></div>
+								<span class="mod-input"></span>
+								<span class="file-name">${item.title}</span>
+								<input type="text" class="file-text" style="display: none;">
+							</div>
+							<div class="file">
+								<div class="ico"></div>
+								<span class="check icon-black"></span>
+								<span>CSS3课程</span>
+								<input type="text" class="text" style="display: none;">
+							</div>
+							<div class="file">
+								<div class="ico"></div>
+								<span class="check icon-black"></span>
+								<span>CSS3课程</span>
+								<input type="text" class="text" style="display: none;">
+							</div>
+							<div class="file">
+								<div class="ico"></div>
+								<span class="check icon-black"></span>
+								<span>未标题-2</span>
+								<input type="text" class="text" style="display: none;">
+							</div>
+							<div class="file">
+								<div class="ico txt"></div>
+								<span class="check icon-black"></span>
+								<span>要回复的帖子</span>
+								<input type="text" class="text" style="display: none;">
+							</div>
+							<div class="file">
+								<div class="ico zip"></div>
+								<span class="check icon-black"></span>
+								<span>8-12</span>
+								<input type="text" class="text" style="display: none;">
+							</div>-->
+							
+							<div class="blank">
+								<p class="logo"></p>
+								<p class="nofile">暂无文件</p>
+								<p class="tip">请点击左上角的“上传”按钮添加</p>
+							</div>
+							
+						</div>
+						
+						
+					</div>
+				</section>
+				<div class="tanbox tanbox1">
+					<div class="conf">
+						<i class="close-ico">X</i>
+						<h3 class="conf-title">删除文件</h3>
+						<div class="conf-content">
+							确定要删除文件吗？
+						</div>
+						<div class="conf-btn">
+							<a href="javascript:;">确定</a>
+							<a href="javascript:;">取消</a>
+						</div>
+					</div>
+				</div>
+				<div class="tanbox tanbox2">
+					<div class="conf">
+						<i class="close-ico">X</i>
+						<h3 class="conf-title">移动文件</h3>
+						<div class="conf-content">
+							
+						</div>
+						<div class="conf-btn">
+							<a href="javascript:;">确定</a>
+						</div>
+					</div>
+				</div>
+				
+				
+				
+				<div class="full-tip-box">
+					<span class="full-tip">
+						<span class="inner">
+							<i class="ico"></i>
+							<span class="tip-text">新建文件夹成功</span>
+						</span>
+					</span>
+				</div>
+				
+				
+				<!--<div class="rename-tip-box">
+					<span class="rename-tip">
+						<span class="inner">
+							<i class="ico"></i>
+							<span class="tip-text">请选择单个文件</span>
+						</span>
+					</span>
+				</div>-->
+				
+				<!--<div class="move-tanbox">
+					<p class="move-tanbox-t">
+						<span class="fl">请选择存储位置</span><i>X</i>
+					</p>
+				</div>-->
+				<div id="move-tanbox">
+					<div class="move-conf">
+						<i class="close-ico">X</i>
+						<h3 class="conf-title">选择存储位置</h3>
+						<div class="conf-content">
+							<div class="tree">
+								
+							</div>
+						</div>
+						<div class="bottom clearfix">
+							<div class="move-tip fl"></div>
+							<div class="conf-btn fl">
+								<a href="javascript:;">确定</a>
+								<a href="javascript:;">取消</a>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		
+	</body>
+	
+	<script src="./js/data.js"></script>
+	<script src="./js/utils.js"></script>
+	<script src="./js/tools.js"></script>
+	<script src="./js/index.js"></script>
+	
+	
+</html>
