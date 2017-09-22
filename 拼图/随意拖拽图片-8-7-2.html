@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<!--<link rel="stylesheet" href="reset.css" />-->
+		<style>
+			ul,li{
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+			.wrap{
+				width: 1200px;
+				height: 800px;
+				background: url(images/bg.png) no-repeat;
+				margin: 0 auto;
+				position: relative;
+			}
+			.screen{
+				width: 639px;
+				height: 380px;
+				position: absolute;
+				left: 281px;
+				top: 214px;
+			}
+			#btn{
+				width: 96px;
+				height: 38px;
+				border: 2px solid #fff;
+				color: #fff;
+				background: #594da7;
+				border-radius: 5px;
+				position: absolute;
+				left: 26px;
+				top: 170px;
+			}
+			#btn.active{
+				background: #fff;
+				color: #594da7;;
+			}
+			.maincont{
+				width: 495px;
+				height: 360px;
+				position: absolute;
+				left: 140px;
+				top: 5px;
+			}
+			.maincont li{
+				position: absolute;
+			}
+			img{
+				width: 120px;
+				height: 120px;
+			}
+			
+			
+		</style>
+	</head>
+	<body>
+		<div class="wrap">
+			<div class="screen clearfix">
+				<input type="button" value="随机" id="btn"/>
+				<ul class="maincont clearfix">
+				</ul>
+			</div>
+		</div>
+		<script src="./js/utils.js"></script>
+		<script>
+			
+			var data = [
+				{
+					'id':1,
+					'src':'images/1.png'
+				},
+				{
+					'id':2,
+					'src':'images/2.png'
+				},
+				{
+					'id':3,
+					'src':'images/3.png'
+				},
+				{
+					'id':4,
+					'src':'images/4.png'
+				},
+				{
+					'id':5,
+					'src':'images/5.png'
+				},
+				{
+					'id':6,
+					'src':'images/6.png'
+				},
+				{
+					'id':7,
+					'src':'images/7.png'
+				},
+				{
+					'id':8,
+					'src':'images/8.png'
+				},
+				{
+					'id':9,
+					'src':'images/9.png'
+				},
+				{
+					'id':10,
+					'src':'images/10.png'
+				},
+				{
+					'id':11,
+					'src':'images/11.png'
+				},
+				{
+					'id':12,
+					'src':'images/12.png'
+				}
+			]
+			
+			//生成12个li
+			//0~3   top:0
+			//4~7   top:125
+			
+			
+			
+			
+			//-------1.封装函数，作用是根据data生成结构-------
+			function render(){
+				var listHtml = data.map(function(item,index){
+					return `
+							<li style="width:120px;height:120px;left:${index%4*125}px;top:${Math.floor(index/4)*125}px;">
+								<img src="${item.src}"/>
+							</li>
+						`
+				}).join('');
+				var list = $('.maincont')[0];
+				var lis = list.getElementsByTagName('li');
+				
+				list.innerHTML = listHtml;
+			}
+			render();
+			//先把所有li的初始位置存起来
+			var lis = document.getElementsByTagName('li');
+			var liPositionArr = [];
+			for(var i=0; i<lis.length; i++){
+				lis[i].index = i;
+				liPositionArr.push({
+					left:lis[i].offsetLeft,
+					top:lis[i].offsetTop
+				})
+			}
+			for( var i = 0; i < lis.length; i++ ){
+	            lis[i].index = i;  // 添加一个下标，目的是在up的时候从数组中找到对应的位置
+	            lis[i].style.position = 'absolute';
+	            lis[i].style.left = liPositionArr[i].left + 'px';
+	            lis[i].style.top = liPositionArr[i].top + 'px';
+	        }
+			
+			//----------2.随机打乱图片--------
+			randomBtn = $('#btn');
+			randomBtn.onclick = function(){
+				this.className = 'active';
+				//找到每个li现在的位置
+				var list = $('.maincont')[0];
+				var lis = list.getElementsByTagName('li');
+				
+				liPositionArr.sort(function(){
+					return Math.random()-0.5;
+				});
+				//对data排完序之后，使所有的li运动到相应的位置
+				/*
+				data = [
+					{
+						id:12,
+						src:12.png
+					}
+				]
+				*/
+				for(var i=0; i<lis.length; i++){
+					lis[i].index = i;
+					mTween(lis[i],{
+						left:liPositionArr[i].left,
+						top:liPositionArr[i].top
+					},500)
+				}
+			}
+			randomBtn.onmouseover = function(){
+				this.className = 'active';
+			}
+			randomBtn.onmouseout = function(){
+				this.className = '';
+			}
+			
+			//---------3.拖拽图片换位置-----------
+			var list = $('.maincont')[0];
+			var lis = list.getElementsByTagName('li');
+			
+			
+			//var arr = [];
+			//图片拖拽的范围
+			var minL = -200;
+			var minT = -100;
+			var maxL = list.clientWidth - lis[0].offsetWidth;
+			var maxT = list.clientHeight - lis[0].offsetHeight;
+			var zIndex = 0;
+			
+			list.onmousedown = function(ev){
+				
+				var target = ev.target.parentNode;
+				console.log(target)
+				ev.preventDefault();
+				if(target.nodeName === "LI"){  //如果点击的是li
+				 	ev.preventDefault();  //阻止浏览器默认行为
+					zIndex++;
+					target.style.zIndex = zIndex;
+					
+					var disX = ev.clientX - target.offsetLeft;
+					var disY = ev.clientY - target.offsetTop;
+					document.onmousemove = function(ev){
+						var l = ev.clientX - disX;
+						var t = ev.clientY - disY;
+						if(l<minL) l = minL;
+						if(t<minT) t = minT;
+						if(l>maxL) l = maxL;
+						if(t>maxT) t = maxT;
+						
+						target.style.left = l + 'px';
+						target.style.top = t + 'px';
+					}	
+						
+					
+					document.onmouseup = function(ev){
+						document.onmousemove = document.onmouseup = null;
+						//up时检测是否碰撞
+						var arr = [];  //每次移动时var一个新的空arr;
+						for(var i=0; i<lis.length; i++){
+							if(target !== lis[i]){
+								if(collision(target,lis[i])){  //如果该哪个li被碰到了（不包括自己），就放入arr里
+									arr.push(lis[i]);
+								}
+							}
+							
+						}
+						//console.log(arr)
+						//循环结束后，获得所有被碰撞的li，循环这些li，找距离最近的
+						
+						if(arr.length == 0){ //如果没有和任何一个li碰撞，就运动回原位置
+							mTween(target,{
+								left:liPositionArr[target.index].left,
+								top:liPositionArr[target.index].top
+							},500)
+						}else{  //有碰撞的元素
+							var oLi = null;  //存一下筛选出的符合交换条件的div
+							if(arr.length === 1){  //仅仅和一个元素碰撞，就交换位置
+								
+								oLi = arr[0];
+							}else{
+								//被拖动的li的中心点到浏览器可视区左边的距离，到浏览器可视区上边的距离
+								movedLiX = target.offsetLeft + target.offsetWidth/2;
+								movedLiY = target.offsetTop + target.offsetHeight/2;
+								var min = 999999999999;  //要放在move里，移动时重新var min为9999999999；
+								
+								
+								for(var i=0; i<arr.length; i++){
+									
+									//li的中心点到浏览器可视区左边的距离,到浏览器可视区上边的距离
+									var collisionLiX = arr[i].offsetLeft + arr[i].offsetWidth/2;
+									var collisionLiY = arr[i].offsetTop + arr[i].offsetHeight/2;
+									//二者的差值
+									var chaX = movedLiX - collisionLiX;
+									var chaY = movedLiY - collisionLiY;
+									var xiebian = chaX*chaX + chaY*chaY;  //算出斜边的平方（box的中心点到被碰撞的div的中心点的距离的平方）
+									
+									if(xiebian <= min){//找出box的中心点到被碰撞的div的中心点的距离的平方的最小值，以及该最小值对应的div
+										min = xiebian;
+										oLi = arr[i];
+									}
+								}
+							}
+							
+							//以上结束之后，拿到交换位置的目标元素oLi
+							oLi.style.zIndex = zIndex;
+							console.log(target.index,oLi.index,liPositionArr[oLi.index])
+							mTween(target,{
+								left:liPositionArr[oLi.index].left,
+								top:liPositionArr[oLi.index].top
+							},500,'linear',function(){
+								//交换下标
+								var i = target.index;
+                          		target.index = oLi.index;
+                            	oLi.index = i;   
+							});
+							
+							mTween(oLi,{
+								left:liPositionArr[target.index].left,
+								top:liPositionArr[target.index].top
+							},500)
+							
+						}
+						
+						
+						//render();
+						
+					};
+				}
+			}
+			
+			
+			
+			/*
+				检测两个元素是否碰上
+					1. 拖拽的元素  obj1
+					2. 被碰撞的元素 obj2
+			*/
+			function collision(obj1,obj2){
+				var obj1Rect = obj1.getBoundingClientRect();	
+				var obj2Rect = obj2.getBoundingClientRect();	
+
+				if(obj1Rect.right < obj2Rect.left || obj1Rect.bottom < obj2Rect.top || obj1Rect.left > obj2Rect.right || obj1Rect.top > obj2Rect.bottom){
+					return false;
+				}else{
+					return true;
+				}
+			}
+			
+			
+			
+		</script>
+	</body>
+</html>
