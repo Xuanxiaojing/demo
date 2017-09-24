@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="index.css" />
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="wrap">
+			<div class="box1">
+				<ul>
+					<li><img src="images/0.png" /></li>
+					<li><img src="images/0.png" /></li>
+				</ul>
+			</div>
+			<div class="box2">
+				<ul>
+					<li><img src="images/0.png" /></li>
+					<li><img src="images/0.png" /></li>
+				</ul>
+			</div>
+			<div class="dian1"><ul><li><img src= /></li></ul></div>
+			<div class="box3">
+				<ul>
+					<li><img src="images/0.png" /></li>
+					<li><img src="images/0.png" /></li>
+				</ul>
+			</div>
+			<div class="box4">
+				<ul>
+					<li><img src="images/0.png" /></li>
+					<li><img src="images/0.png" /></li>
+				</ul>
+			</div>
+			<div class="dian2"><ul><li><img src= /></li></ul></div>
+			<div class="box5">
+				<ul>
+					<li><img src="images/0.png" /></li>
+					<li><img src="images/0.png" /></li>
+				</ul>
+			</div>
+			<div class="box6">
+				<ul>
+					<li><img src="images/0.png" /></li>
+					<li><img src="images/0.png" /></li>
+				</ul>
+			</div>
+		</div>
+		<script src="utils.js"></script>
+		<script>
+			var arr = ["images/0.png","images/1.png","images/2.png","images/3.png","images/4.png","images/5.png","images/6.png","images/7.png","images/8.png","images/9.png"];
+			var wrap = $('.wrap')[0];
+			var divs = $('.wrap div');
+			
+			var uls = $('ul',wrap);
+			var n = 0;
+			var oldtime = '';
+			
+			funcDate()
+			function funcDate(){
+				var d = new Date();
+				var time = addZero(d.getHours())+":"+addZero(d.getMinutes())+":"+addZero(d.getSeconds());
+				if(oldtime=='') oldtime=time;
+				
+				for( let i = 0; i < time.length; i++ ){
+					let imgs = uls[i].getElementsByTagName('img');
+					if(time.charAt(i) === ':'){
+						imgs[0].src = 'images/dian.png';
+						
+							setTimeout(function (){
+								imgs[0].src = 'images/dian2.png';
+							},500)
+						
+					}else{
+						imgs[0].src = 'images/'+oldtime.charAt(i)+'.png';
+						imgs[1].src = 'images/'+time.charAt(i)+'.png';
+					}
+				}
+				
+				for(var i=0;i<oldtime.length;i++){
+					
+					//做动画
+					if(oldtime.charAt(i)!=time.charAt(i)){
+						mTween(uls[i],'top',-80,500,'linear',function(ele){
+							var imgs = ele.getElementsByTagName('img');
+							imgs[0].src = imgs[1].src;
+							ele.style.top = 0;
+						});
+					}
+					
+				}
+				oldtime = time;
+			}
+			setInterval(funcDate,1000)
+			
+			
+			
+			
+			
+			
+			
+			
+		</script>
+	</body>
+</html>

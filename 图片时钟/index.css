@@ -1,0 +1,67 @@
+.wrap{
+	width: 1024px;
+	height: 701px;
+	background: url(images/bg.png) no-repeat;
+	margin: auto;
+	position: relative;
+}
+.wrap div{
+	width: 60px;
+	height: 80px;
+	position: absolute;
+	top: 275px;
+	overflow: hidden;
+}
+.wrap div ul{
+	position: absolute;
+	top: 0;
+	height: 200%;
+}
+.wrap div img{
+	/*width: 60px;
+	height: 80px;*/
+	float: left;
+	margin-bottom: 2px;
+}
+.box1{
+	left: 295px;
+}
+.box2{
+	left: 360px;
+}
+.wrap .dian1{
+	position: absolute;
+	left: 441px;
+	top: 290px;
+}
+.box3{
+	left: 478px;
+}
+.box4{
+	left: 543px;
+}
+.wrap .dian2{
+	position: absolute;
+	left: 621px;
+	top: 290px;
+}
+.box5{
+	left: 662px;
+}
+.box6{
+	left: 727px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
