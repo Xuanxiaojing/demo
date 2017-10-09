@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			ul,li{
+				padding: 0;
+				margin: 0;
+				list-style: none;
+			}
+			.clearfix:after{
+				content:"";
+				display:block;
+				clear:both;
+				height:0;
+				overflow:hidden;
+			}
+			.clearfix{
+				zoom:1;	
+			}
+			a{
+				text-decoration: none;
+				color: inherit;
+			}
+			.fl{
+				float: left;
+			}
+			.fr{
+				float: right;
+			}
+			#wrap{
+				width:764px;
+				height: 800px;
+				background:url(images/bg.png) no-repeat;
+				padding-top: 100px;
+				margin:0 auto;
+			}
+			.box{
+				width:480px;
+				height:300px;
+				border-radius: 10px;
+				
+				background:url(images/logo.png) no-repeat #fff 140px 36px;
+				margin:auto;
+			}
+			ul{
+				padding: 19px 0 17px 0;
+			}
+			li{
+				height: 36px;
+				padding:0 30px 0 25px;
+				line-height: 36px;
+			}
+			.bottom{
+				color: #fff;
+				height:34px;
+				background:#e15671;
+				padding:15px 0 0 30px;
+				border-radius: 0 0 10px 10px;
+			}
+			.icon{
+				background:url(images/1.png) no-repeat;
+			}
+			.bottom input{
+				margin-right: 20px;
+			}
+			.i1{
+				width:24px;
+				height:20px;
+				margin:0 10px 0 80px;
+			}
+			.i2{
+				width:24px;
+				height:24px;
+				margin:0 10px 0 40px;
+				background-position: 0 -21px;
+			}
+			.i3{
+				width:24px;
+				height:24px;
+				margin:0 10px 0 40px;
+				background-position: 0 -46px;
+			}
+			.transparent{
+				background-color: transparent;
+				color:#000;
+			}
+			.pink{
+				background-color: rgba(225,86,113,0.2);
+				color:#000;
+			}
+			.red{
+				background-color: rgba(225,86,113,0.8);
+				color:#fff;
+			}
+			.all{
+				color:rgba(255,255,255,0.8)
+			}
+		</style>
+		<script src="../js/jquery-3.2.0.min.js"></script>			
+	</head>
+	<body>
+		<div id="wrap">
+			<div class="box">
+				<ul class="list">
+					<li>
+						<input type="checkbox" />
+						<span>私奔</span>
+						<span class="fr">梁博</span>
+					</li>
+					<li>
+						<input type="checkbox" />
+						<span>北京北京</span>
+						<span class="fr">梁博 黄勇</span>
+					</li>
+					<li>
+						<input type="checkbox" />
+						<span>我爱你中国</span>
+						<span class="fr">梁博</span>
+					</li>
+					<li>
+						<input type="checkbox" />
+						<span>花火</span>
+						<span class="fr">梁博</span>
+					</li>
+					<li>
+						<input type="checkbox" />
+						<span>回来</span>
+						<span class="fr">梁博</span>
+					</li>
+					<li>
+						<input type="checkbox" />
+						<span>爱要有你才完美</span>
+						<span class="fr">梁博 那英</span>
+					</li>
+				</ul>
+				
+				<div class="bottom clearfix">
+					<a href="javascript:;" class="all fl">
+						<input type="checkbox" class="fl"/>
+						全选
+					</a>
+					<a href="javascript:;" class="fl">
+						<icon class="icon i1 fl"></icon>收藏
+					</a>
+					<a href="javascript:;" class="fl">
+						<icon class="icon i2 fl"></icon>添加
+					</a>
+					<a href="javascript:;" class="fl">
+						<icon class="icon i3 fl"></icon>删除
+					</a>
+				</div>
+			</div>
+		</div>
+		
+		<script>
+			// 隔行变色
+			$('.list li:even').addClass('transparent');
+			$('.list li:odd').addClass('pink');
+
+			// 移入
+			let lis = $('.list li');
+			let inputs = $('.list input');
+			lis.mouseenter(function(){
+				// console.log(this); // 是原生的元素
+				// lis.removeClass('red')// 所有的li取消高亮
+				$(this).addClass('red');// 当前移入的高亮
+			})
+			lis.mouseleave(function(){
+
+				// 获取到checkbox单选框
+				let checked = $(this).find('input[type=checkbox]').prop('checked');
+				// console.log(checked)
+				if(!checked){
+					$(this).removeClass('red');
+					$('.list li:even').addClass('transparent');
+					$('.list li:odd').addClass('pink');
+				}
+			})
+
+			// 全选
+			let checkAll = $('.all input').eq(0);
+			console.log(checkAll)
+			checkAll.on('click',function(){
+				console.log(this,'this')
+				let checkedAll = $(this).prop('checked')
+				
+				console.log(checkedAll)
+				if(checkedAll){
+					lis.addClass('red');
+					inputs.prop('checked',true);
+				}else{
+					inputs.prop('checked',false);
+					lis.removeClass('red');
+					$('.list li:even').addClass('transparent');
+					$('.list li:odd').addClass('pink');
+				}
+			})
+
+			// 跟随
+			lis.on('click','input',function(){
+				let c = lis.toArray()
+			})
+
+			
+			
+		</script>
+	</body>
+</html>
