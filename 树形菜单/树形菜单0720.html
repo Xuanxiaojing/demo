@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <style>
+    html {
+        width: 100%;
+        height: 100%;
+    }
+    
+    body {
+        margin: 0px;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .main {
+        width: 100%;
+        height: 100%;
+        background: url(./image/bg.png) no-repeat;
+        background-size: 100% 100%;
+        overflow: hidden;
+    }
+    
+    .logo {
+        display: block;
+        width: 200px;
+        height: 55px;
+        background: url(./image/logo.png) no-repeat;
+        margin: 20px auto;
+    }
+    
+    ul {
+        list-style: none;
+        font-size: 22px;
+        color: #8c949c;
+        font-weight: bold;
+    }
+    
+    ul li {
+        position: relative;
+        padding-left: 10px;
+    }
+    
+    ul li div {
+        height: 98%;
+        width: 1px;
+        border-left: 1px dotted #ccc;
+        position: absolute;
+        left: 14px;
+        top: 18px;
+    }
+    
+    ul ul {
+        -display: none;
+    }
+    
+    ul li span {
+        display: block;
+        line-height: 32px;
+        padding-left: 15px;
+        background: url(./image/icon.png) no-repeat left 500px;
+    }
+    
+    ul li span.add {
+        background-position: 0px -32px;
+    }
+    
+    ul li span.line {
+        background-position: 0px 11px;
+    }
+    
+    .tree {
+        margin-left: 300px;
+    }
+    </style>
+    <script>
+	    
+		
+		window.onload = function(){
+			var arr = [
+			    {
+			        title: "第一级菜单",
+			        child: [
+				        {
+				            title: "第二集菜单"
+				        }, 
+				        {
+				            title: "第二集菜单",
+				            child: [
+					            {
+					                title: "第三集菜单"
+					            },
+					            {
+					                title: "第三集菜单",
+					                child: [
+						                {
+						                    title: "第四集菜单"
+						                }, {
+						                    title: "第四集菜单"
+						                }, {
+						                    title: "第四集菜单"
+						                }
+					                ]
+					            }, 
+					            {
+					                title: "第三集菜单"
+					            }
+				            ]
+				        }, 
+				        {
+				            title: "第二集菜单",
+				            child: [
+					            {
+					                title: "第三集菜单"
+					            }, {
+					                title: "第三集菜单"
+					            }
+				            ]
+				        }
+			        ]
+			    }, 
+			    {
+			        title: "第一级菜单",
+			        child: [
+				        {
+				            title: "第二集菜单"
+				        }, 
+				        {
+				            title: "第二集菜单",
+				            child: [
+					            {
+					                title: "第三集菜单"
+					            }, 
+					            {
+					                title: "第三集菜单",
+					                child: [
+						                {
+						                    title: "第四集菜单"
+						                }, 
+						                {
+						                    title: "第四集菜单"
+						                }, 
+						                {
+						                    title: "第四集菜单"
+						                }
+					                ]
+					            }, 
+					            {
+					                title: "第三集菜单"
+					            }
+				            ]
+				        }, 
+				        {
+				            title: "第二集菜单",
+				            child: [
+					            {
+					                title: "第三集菜单"
+					            }, 
+					            {
+					                title: "第三集菜单"
+					            }
+				            ]
+				        }
+			        ]
+			    }, 
+			    {
+			        title: "第一集菜单"
+			    },
+			    {
+			        title: "第一级菜单",
+			        child: [
+				        {
+				            title: "第二集菜单"
+				        }, 
+				        {
+				            title: "第二集菜单",
+				            child: [
+					            {
+					                title: "第三集菜单"
+					            }, 
+					            {
+					                title: "第三集菜单",
+					                child: [
+						                {
+						                    title: "第四集菜单"
+						                }, 
+						                {
+						                    title: "第四集菜单"
+						                }, 
+						                {
+						                    title: "第四集菜单"
+						                }
+					                ]
+					            }, 
+					            {
+					                title: "第三集菜单"
+					            }
+				            ]
+				        }, 
+				        {
+				            title: "第二集菜单",
+				            child: [
+					            {
+					                title: "第三集菜单"
+					            }, 
+					            {
+					                title: "第三集菜单"
+					            }
+				            ]
+				        }
+			        ]
+			    }
+		    ];
+			
+			
+			//生成结构
+			var tree = document.getElementById('list');
+			tree.innerHTML = render(arr);  //tree里的结构就是render(data)返回的结构
+			// 只要遇到数组，都是生成ul结构和根据数组的项数生成li，但是forEach()只能循环一层，所以用递归
+			function render(data){
+				var html = '<ul>';
+			
+				data.forEach(function(item){
+					html += `<li><span>${item.title}</span>`;
+					if(item.child){
+						html += render(item.child);
+						//每次调用render函数会返回一个<ul></ul>结构，添加在原有的html结构里
+						//但是render不会一直不停地执行，因为只有有item.child时，才会执行
+					}
+					html +='</li>';
+				});
+				html += '</ul>';
+				return html;
+			};
+			
+			
+			
+			var spans = document.getElementsByTagName('span');   //获取所有的标题span
+			
+			//循环spans
+			for(var i=0; i<spans.length; i++){
+				spans[i].index = i;
+				//判断每个span有没有兄弟元素
+				if(spans[i].nextElementSibling){  //如果有兄弟元素
+					spans[i].className = 'add';  //显示加号
+					spans[i].nextElementSibling.style.display = 'none';//把对应的子级菜单隐藏
+				}
+				spans[i].onclick = function(){  //点击每个span时
+					var ulN = this.parentNode.parentNode.querySelectorAll('ul');  //获取当前点击的span的父级的父级下的所有ul
+					var spanA = this.parentNode.parentNode.querySelectorAll('span');  //获取当前点击的span的父级的父级下的所有span
+					//注意ul和span不一定是一一对应的！
+					for(var j=0; j<ulN.length; j++){
+						ulN[j].style.display = 'none';  //把当前点击的span的父级的父级下的所有的ul全部隐藏
+					}
+					//循环当前点击的span的父级的父级下的所有span
+					for(var j=0; j<spanA.length; j++){
+						spanA[j].index = j; 
+						if(spanA[j].nextSibling && j!=this.index){  //如果该span有兄弟元素并且不是当前点击的span，如果不排除自己的话，下次点击自己就收不起来了
+							spanA[j].className = 'add';  //就显示+号
+						}
+					}
+					if(this.className == 'line'){  //如果当前点击的span显示-号
+						this.nextElementSibling.style.display = 'none';  //该标题的兄弟元素ul隐藏
+						this.className = 'add';  //当前被点击的span改为显示+号
+					}else{  //如果当前点击的span显示+号
+						this.nextElementSibling.style.display = 'block';  //当前被点击的span标题的兄弟ul显示
+						this.className = 'line';  ////当前被点击的span标题显示-号
+					}
+				}
+			}
+		}
+
+    </script>
+</head>
+
+<body>
+    <div class="main">
+        <a href="http://www.miaov.com" class="logo"></a>
+        <div class="tree"  id="list">
+            <!--<ul>
+                  <li>
+                    <span class="line">第一集菜单</span>
+                    <ul style="display: block;">
+                        <li><span>第二集菜单</span></li>
+                        <li><span>第二集菜单</span></li>
+                        <li>
+                            <span class="line">第二集菜单</span>
+                            <ul style="display: block;">
+                                <li><span>第三集菜单</span></li>
+                                <li><span>第三集菜单</span></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li> 
+            </ul> -->
+        </div>
+    </div>
+</body>
+
+</html>
