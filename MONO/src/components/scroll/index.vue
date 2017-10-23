@@ -37,12 +37,13 @@
       }
     },
     mounted() {
-      setTimeout(() => {
+      setTimeout(() => {        
         this._initScroll()
       }, 20)
     },
     methods: {
       _initScroll() {
+        
         if (!this.$refs.wrapper) {
           return
         }
@@ -50,7 +51,7 @@
           probeType: this.probeType,
           click: this.click
         })
-
+        console.log(this.scroll,'tttttttttttttttt')
         if (this.listenScroll) {
           let _this = this
           this.scroll.on('scroll', pos => {
@@ -84,9 +85,11 @@
         this.scroll && this.scroll.refresh()
       },
       scrollTo() {
+        console.log(this.scroll,'this.scroll')
         this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
       },
       scrollToElement() {
+        // console.log(12333333333)
         this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
       }
     },

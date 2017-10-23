@@ -32,7 +32,8 @@
         </div>
         <div class="category" v-if="this.itemData.type === '音乐'">
             <div class="topic">
-                <img :src="this.itemData.img_json.src" />							
+                <!-- <img :src="this.itemData.img_json.src" /> -->
+                <img :src="songImg" v-if="this.itemData.music" />
                 <re-play-bar :index="this.index" :itemData="this.itemData" :type="type"></re-play-bar>						
             </div>
             <h2>{{this.itemData.img_json.img_title}}</h2>
@@ -50,12 +51,29 @@ import rePlayBar from '@/components/re-playbar'
 import Axios from 'axios'
 
 export default {
+    data(){
+        return {
+            // songImg:''
+        }
+    },
 	components: {
 		recommendHeader,
         recommendFooter,
         rePlayBar
 	},
-	props:['itemData','index','type']
+    props:['itemData','index','type'],
+    watch:{
+
+    },
+    computed: {
+        songImg(){
+            // console.log(this.itemData,'this.itemData')
+            /* if(!this.itemData.music){
+                this.itemData.music =
+            } */
+            return `https://y.gtimg.cn/music/photo_new/T002R300x300M000${this.itemData.music[0].data[0].album.mid}.jpg?max_age=2592000`
+        }
+    }
 }
 </script>
 

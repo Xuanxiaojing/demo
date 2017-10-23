@@ -94,22 +94,22 @@ export default {
 			// console.log('触屏事件')
 			ev = ev.changedTouches[0]; // 触发当前事件的手指列表，取第一个即可
 			this.iStartTouchX = ev.pageX; // 手指按下的坐标
-			this.iStartX = this.target;
-			clearInterval(this.timer1);			
+			this.iStartX = this.target; // 记录手指按下时ul的left值
+			clearInterval(this.timer1);	// 停止定时器		
 		},
 		fnMove(ev){
-			ev = ev.changedTouches[0];
+			ev = ev.changedTouches[0]; // 
 			
-			let disI = ev.pageX - this.iStartTouchX;	 // 手指在屏幕上移动的距离
+			let disI = ev.pageX - this.iStartTouchX;	 // 手指在屏幕上移动的距离（小于0说明是往左，大于0说明是往右）
 			
-			this.target = this.iStartX + disI; // 图片移动的距离等于起始位置加上手指在屏幕上移动的距离
+			this.target = this.iStartX + disI; // 图片要移动到的目标位置等于起始位置加上手指在屏幕上移动的距离
 			// console.log(this.target,'disI')
-			Utils.mTween(this.list,"left",this.target,2,"linear");
+			Utils.mTween(this.list,"left",this.target,2,"linear"); // 图片被拖到目标位置
 			// console.log(this.list,'this.list')
 		},
 		fnEnd(ev){
 			this.iNow = Math.abs(this.target/this.iW); // 手指拖动的距离除以屏幕的宽度，来判断松开手指之后，如果拖动距离比较大，就显示下一张，否则显示当前这张
-			this.iNow = Math.round(this.iNow);
+			this.iNow = Math.round(this.iNow); // 
 			console.log(this.iNow);
 			if(this.iNow < 0){
 				this.iNow = 0;

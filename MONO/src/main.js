@@ -11,6 +11,7 @@ import '@/assets/css/app.css'
 import '@/assets/js/shipei.js'
 import '@/assets/js/base64.js'
 
+
 /* import wcSwiper from 'wc-swiper'
 import 'wc-swiper/style.css'
 Vue.use(wcSwiper); */

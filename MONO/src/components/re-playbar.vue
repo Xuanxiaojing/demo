@@ -6,7 +6,7 @@
             <!-- 不能在公共组件里设置样式，否则所有用到的地方都会有同样的样式，样式要交给“当前的”进度条 -->
             <span class="currentProgress" ref="currentProgress"></span>
             <i aria-hidden="true" @click="play(index)" :class="playBtnCls" ref="playBtn"></i>
-            <span>{{this.musicName}}</span>
+            <span  v-if="this.itemData.music">{{this.musicName}}</span>
             <em class="fr">
                 {{timerFomart(musicDuration)}}
                 <i class="fa fa-music" aria-hidden="true"></i>
@@ -70,13 +70,15 @@ export default {
             return this.$store.getters.getMusicDuration ? this.$store.getters.getMusicDuration : '00:00'
         },
         musicName(){
-            n++;
             // 需要等音乐请求到并且写入listdata之后，再
-            console.log(this.itemData.music,'this.itemData.music1111')
-            console.log('我走这里了'+n+'次')
-            /* if(this.itemData.music !== 'undefined'){
-                return this.itemData.music.data[0].name
-            } */
+            // console.log('我走这里了'+n+'次')
+            // if(this.$store.state.musicLoadFinish){
+                console.log(this.itemData.music,'this.itemData')
+                return this.itemData.music[0].data[0].name
+            // }else{
+            //     return '正在加载'
+            // }
+            
         }
         // 出现的问题：一上来根据itemData计算musicName，当请求到音乐数据，修改state里的listdata时，这里不能响应到变化
     },
@@ -95,12 +97,14 @@ export default {
             this.$store.commit('sendProgressDom',this.$refs.currentProgress);
             
             if ( this.itemData.isPlay ==false ){ 
-                
+                console.log(this.itemData.music)
                 let id = this.itemData.music[0].data[0].id;
-                this.$store.commit('sendMusic',this.itemData.music[0].url[id]);
+                // 把当前要播放的歌曲的所有信息发送给公共的audio元素
+                this.$store.commit('sendMusic',this.itemData.music[0]);
+                // this.$store.commit('sendMusic',this.itemData.music[0].url[id]);
                 this.$store.commit('play');
             }else{
-                this.$store.commit('pause')
+                this.$store.commit('pause');
             }
             this.isPlay = !this.isPlay;
             // console.log(this.$store.state.listdata.length,'this.$store.state.listdata.length')

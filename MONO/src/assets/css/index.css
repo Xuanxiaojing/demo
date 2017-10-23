@@ -58,17 +58,19 @@ body {
   height: 5.18518519rem;
   background: #232427;
   z-index: 99;
-  padding: 0.92592593rem 0 0 4.62962963rem;
+  padding: 0.92592593rem 0 0 4.25925926rem;
   text-align: center;
 }
 .footer_nav li {
-  width: 2.59259259rem;
+  width: 4.81481481rem;
+  height: 5.18518519rem;
   float: left;
-  margin-right: 8.88888889rem;
+  margin-right: 6.66666667rem;
   color: #ffffff;
 }
 .footer_nav li a {
   font-size: 2.03703704rem;
+  display: block;
 }
 .footer_nav li span {
   font-size: 1.03703704rem;

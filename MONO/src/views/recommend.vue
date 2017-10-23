@@ -41,6 +41,7 @@
             
         </div>
         <Footer-nav></Footer-nav>
+        
     </div>
 </template>
 
@@ -64,7 +65,7 @@
                 counter : 1, //默认已经显示出15条数据 count等于一是让从16条开始加载
                 num : 4,  // 一次显示多少条
                 pageStart : 0, // 开始页数
-                pageEnd : 0, // 结束页数
+                pageEnd : 0 // 结束页数
             }
         },
         components:{
@@ -80,79 +81,62 @@
             getList(){
                 let _this = this;
                 Axios.get(
-                    'http://localhost:3100/api/users'
+                    'http://192.168.0.104:3100/api/users'
                 )
                 .then((data)=>{
-                    console.log(data.data.data.list,'data');
                     // 提交mutation修改listdata，data.data.list是一个数组
                     // let newData = data.data.list.slice(0,4).push()
                     
                     
                     // if(_this.$store.state.listdata.length !==0&&i<4){
                     // console.log(_this.$store.state.listdata,'llll')
-                         
-                    _this.$store.commit('changeListData',data.data.data.list);   
-                    _this.getMusic();          
+                    let d1 = data.data.data.list;
+                    _this.$store.commit('changeListData',d1)
+                    Jsonp('https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_cp.fcg?tpl=3&page=detail&date=2017-10-17&topid=4&type=top&song_begin=0&song_num=10',{
+                        param:'jsonpCallback'
+                    },function(err,data){
+                        
+                        // 这里获取的是排行榜的众多音乐,data.songlist是想要的列表（数组）
+                        // 转成数组，循环数组，分别拿到每首歌曲的详细信息
+                        
+                        // _this.$store.commit('setAllMusicList',data); // 把拿到的每首歌曲的信息存放到公共的AllMusicList数组里 
+                        data.songlist.forEach(function(item){
+                            // console.log(item.data.songmid,'songmid')
+                            Jsonp(`https://c.y.qq.com/v8/fcg-bin/fcg_play_single_song.fcg?songmid=${item.data.songmid}&tpl=yqq_song_detail&format=jsonp`,{
+                                // param:'getOneSongInfoCallback'
+                            },function(err,data){
+                                // 这里获取的data是单个歌曲的数据，包括url和id
+                                
+                                // let id = data.data[0].id; // 在每首歌曲的详细信息里可以拿到该歌曲的id，通过id拿歌曲地址和歌词
+                                
+                                // let d2 = data; // 每首歌的信息是一个对象，存一下
+                                _this.$store.commit('setAllMusicList',data); // 把拿到的每首歌曲的信息存放到公共的AllMusicList数组里
+                                
+                                // // 出现的问题：如果把所有单个歌曲的数据都存在一个数组里，然后在这个forEach循环结束后，把整个数组提交修改AllMusicList，
+                                // // 那么会发现 第一次刚打开时，用下标取state.AllMusicList[i]会出现undefined
+
+                                // Jsonp(`https://api.darlin.me/music/lyric/${id}/?`,{
+                                //     // param:'getOneSongInfoCallback'
+                                // },function(err,data){
+                                    
+                                //     let oneSongLyric = data.lyric;
+                                //     let base = new Base64();
+                                //     let result = base.decode(oneSongLyric); 
+                                //     d2.lyric = result; // 获取到每首歌的歌词之后，在歌曲的信息里添加lyric属性，存放转码后的歌词
+                                //     _this.$store.commit('setAllMusicList',d2); // 把拿到的每首歌曲的信息存放到公共的AllMusicList数组里                                    
+                                // })
+                            })
+                        })                                                
+                    })      
                 })
             },
             ...mapMutations({
                 setMPlayerScreen: 'setMPlayerScreen'
-            }),
-            getMusic(){
-                let recommendMusic = []
-                let _this = this;
-                Jsonp('https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_cp.fcg?tpl=3&page=detail&date=2017-10-17&topid=4&type=top&song_begin=0&song_num=10',{
-                    param:'jsonpCallback'
-                },function(err,data){
-                    
-                    // 这里获取的是排行榜的众多音乐,data.songlist是想要的列表（数组）
-                    // 转成数组，循环数组，分别拿到每首歌曲的详细信息
-                    
-                    
-                    data.songlist.forEach(function(item){
-                        // console.log(item.data.songmid,'songmid')
-                        Jsonp(`https://c.y.qq.com/v8/fcg-bin/fcg_play_single_song.fcg?songmid=${item.data.songmid}&tpl=yqq_song_detail&format=jsonp`,{
-                            // param:'getOneSongInfoCallback'
-                        },function(err,data){
-                            // console.log(data,' _this.recommendMusicddddddddddddd')
-                            // console.log(data,'============')
-                            recommendMusic.push(data)
-                            console.log(recommendMusic,' _this.recommend')
-                            
-                            // 这里获取的data是单个歌曲的数据，包括url和id
-                            /* let id = data.data[0].id; // 在每首歌曲的详细信息里可以拿到该歌曲的id，通过id拿歌曲地址和歌词
-                            
-                            let oneSongUrl = data.url[id]; // 通过id拿歌曲地址   
-
-                            // console.log(data.data[0],'d---------------')
-                            Jsonp(`https://api.darlin.me/music/lyric/${id}/?`,{
-                                // param:'getOneSongInfoCallback'
-                            },function(err,data){
-                                let oneSongLyric = data.lyric;
-                                let base = new Base64();
-                                let result2 = base.decode(oneSongLyric); 
-                                
-                            }) */
-                        })
-                    })
-                    
-                    _this.$store.commit('setAllMusicList',recommendMusic);
-                    console.log(recommendMusic,' _this.recommendMusicddddddddddddd')
-                    /* let i=0;
-                    _this.recommendList.forEach(function(item1){                        
-                        if(item1.type === '音乐'){
-                            console.log(item1.music,'item1.music')
-                            item1.music.push(_this.$store.state.AllMusicList[i]);
-                            i++;
-                        }
-                    }) 
-                    _this.$store.commit('changeListData',_this.recommendList); */
-                    
-                })
-            }
+            })
         },
         computed: {
             listdata(){
+                console.log(this.$store.state.listdata,'this.$store.state.listdata')
                 return this.$store.state.listdata // 下拉更新数据存放数组
             },
             downdata(){

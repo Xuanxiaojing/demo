@@ -1,27 +1,14 @@
-export const singer = state => state.singer
-
-export const playing = state => state.playing
-
-export const fullScreen = state => state.fullScreen
-
-export const playList = state => state.playList
-
-export const sequenceList = state => state.sequenceList
-
-export const mode = state => state.mode
-
-export const currentIndex = state => state.currentIndex
-
-export const currentSong = state => {
-  return state.playList[state.currentIndex] || {}
+const getters =  {
+  // 获取当前的播放进度
+  getCurrentTime: state => state.currentTime,
+  // 获取音乐的播放时长
+  getMusicDuration: state => state.musicDuration,
+  // 音乐开始加载
+  getIsLoadStart: state => state.musicLoadStart,
+  
+  getProgerssWidth: state => state.progerssWidth,
+  // 当前音乐的详细信息，在播放列表里通过当前音乐的下标获取
+  getCurrentMusic: state => state.musicList[state.currentMusicIndex],
+  getplayState: state => state.playState
 }
-
-export const disc = state => state.disc
-
-export const topList = state => state.topList
-
-export const searchHistory = state => state.searchHistory
-
-export const playHistory = state => state.playHistory
-
-export const favoriteList = state => state.favoriteList
+export default getters
