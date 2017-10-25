@@ -4,6 +4,9 @@
     <!--播放器全局组件-->
     <music-player></music-player>
     <lataly-list></lataly-list>
+    <audio src="" ref="audio" autoplay="autoplay" @canplay="musicCanPlay"  @timeupdate="musicTimeUpdate" preload @ended="musicEnded">
+        <!-- <source src="" type="audio/mpeg"> -->
+    </audio>
   </div>
 </template>
 
@@ -25,7 +28,37 @@ export default {
     MusicPlayer,
     LatalyList
   },
+  methods: {
+    // 音乐播放
+    musicCanPlay () {
+        
+        this.$store.dispatch({
+            type: 'set_MusicDuration',
+            duration: Math.floor(this.$refs.audio.duration)
+        })
+        /* this.$store.commit({
+            type: 'setMusicLoadStart',
+            isloadstart: false
+        }) */
+    },
+    // 音乐播放时间更新事件
+    musicTimeUpdate () {
+        console.log('触发')
+        /* this.$store.dispatch({
+            type: 'set_CurrentTime',
+            time: Math.floor(this.$refs.audio.currentTime)
+            // time: Math.floor(this.$store.state.dom.currentTime)
+        })   */ 
+        this.$store.commit('setCurrentTime', Math.floor(this.$refs.audio.currentTime))
+        this.$store.commit('setProgressWidth');
+    },
+    // 音乐播放结束后触发
+        musicEnded(){
+            // 要告诉公共的audio
+        }
+  },
   mounted(){
+      this.$store.dispatch('sendAudio',this.$refs.audio)
       /* let _this = this;
       Jsonp('https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_cp.fcg?tpl=3&page=detail&date=2017-10-17&topid=4&type=top&song_begin=0&song_num=10',{
           param:'jsonpCallback'

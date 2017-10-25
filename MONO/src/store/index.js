@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import getters from './getters'
 import mutations from './mutations'
+import Base64 from '../assets/js/base64.js'
 // 作为vue的插件使用 整个应用要取vuex中的状态
 Vue.use(Vuex)
 
@@ -21,6 +22,7 @@ let store = new Vuex.Store({
       "songid":"14361",
       "singer":"王菲"
     } */], // 音乐的播放列表
+    lyricData:{},
     AllMusicList:[], // 所有音乐
     playState:false, //播放按钮状态
     mPlayerScreen:false, // 控制音乐播放器页的显示和隐藏，true显示，false隐藏
@@ -33,7 +35,8 @@ let store = new Vuex.Store({
     latalyListShow:false, // 控制播放列表的显示和隐藏
     musicLoadFinish:false,
     currentSong:null,
-    currentLyric:null
+    currentLyric:'',
+    allPlayBtn:null
   },
   getters,
   mutations: {
@@ -45,12 +48,11 @@ let store = new Vuex.Store({
       state.musicList = payload
     },
     changeListData(state,payload){
-      console.log('我变了：',payload)
       state.listdata = payload;
       state.listdata.forEach((item,index)=>{
         item.isPlay = false;
       }) // 给每条数据加一个isPlay状态，控制音乐的播放和暂停
-/*       let i=0;
+      /*       let i=0;
       let oldListData = _this.$store.state.listdata;
       oldListData.forEach(function(item1){                        
           if(item1.type === '音乐'){
@@ -59,7 +61,7 @@ let store = new Vuex.Store({
               i++;
           }
       }) */
-          
+      
     },
     changeListIsplay(state,payload){
       state.listdata[payload.index].isPlay = payload.isPlay;
@@ -81,22 +83,23 @@ let store = new Vuex.Store({
     },
     pause(state){
       state.playState=false;
-      console.log(state.playState)
       state.audioDom.pause();
       state.btnDom.classList.remove('fa-pause')
-      state.btnDom.classList.add('fa-play');
-      
-      // state.progressDom.style.width = `calc(${(this.getters.getCurrentTime / this.getters.getMusicDuration * 100).toFixed(2)}%`      
+      state.btnDom.classList.add('fa-play');      
     },
     play(state){
-      state.playState=true;
-      state.audioDom.play()
-      state.btnDom.classList.remove('fa-play')
-      state.btnDom.classList.add('fa-pause');
-      console.log(`calc(${(this.getters.getCurrentTime / this.getters.getMusicDuration * 100).toFixed(2)}%)`,'000000000000');
-      
-      
-      // console.log(`calc(${(this.getters.getCurrentTime / this.getters.getMusicDuration * 100).toFixed(2)}%`,'state.progressDom')
+      state.playState=true; // 公共状态设置为true（大播放器要根据它决定是播放还是暂停）
+      state.audioDom.play() // 公共的audio元素开始播放
+      // 先使所有的小播放条的播放按钮显示“fa-play”，同时使它们对应的数据里的isPlay改为false
+      Array.from(state.allPlayBtn).forEach((item)=>{
+        item.classList.remove('fa-pause')
+        item.classList.add('fa-play')
+      })
+      state.listdata.forEach((item,index)=>{
+        item.isPlay = false;
+      }) // 使数据里的isPlay改为false
+      state.btnDom.classList.remove('fa-play') 
+      state.btnDom.classList.add('fa-pause'); // “当前的”小播放条显示“暂停图标”
     },
     setMPlayerScreen(state,flag){
       state.mPlayerScreen = flag;
@@ -105,7 +108,6 @@ let store = new Vuex.Store({
       state.latalyListShow = flag;
     },
     sendAdio(state,obj){
-      console.log(obj,'ooooo')
       state.audioDom = obj;
     },
     sendPlayBtn(state,obj){
@@ -117,13 +119,22 @@ let store = new Vuex.Store({
     },
     sendMusic(state,obj){
       // console.log(state.musicList.includes(state.musicList[state.musicIndex]),'hhhhhhhhahah')
-      if(state.musicList.includes(obj)) return; // 如果播放列表里已经有这首歌，就不再往musicList里重复push
-      state.musicList.push(obj); // 歌曲信息放入播放列表
-      state.currentMusicIndex=state.musicList.length-1; // 当前播放的音乐的下标为播放列表里的最后一首歌（最新添加进来的歌）
-      // state.audioDom.src=state.musicList[state.currentMusicIndex];
-      state.audioDom.src= 'http://'+ state.musicList[state.musicList.length-1].url[obj.data[0].id]; // 根据传进来的歌曲信息里的id拿到歌曲地址
+      // if(state.musicList.includes(obj)) return; // 如果播放列表里已经有这首歌，就不再往musicList里重复push
+      // if(state.musicList.includes(obj)){
+      //   // state.currentMusicIndex=state.musicList.length-1;
+      //   state.currentSong = state.musicList[state.currentMusicIndex]
+      //   state.audioDom.src= 'http://'+ state.currentSong.url[obj.data[0].id];
+      // }
+      if(!state.musicList.includes(obj)){
+        state.musicList.push(obj); // 歌曲信息放入播放列表
+      } 
+      state.currentMusicIndex=state.musicList.indexOf(obj);
+      // state.currentMusicIndex=state.musicList.length-1; // 当前播放的音乐的下标为播放列表里的最后一首歌（最新添加进来的歌）
+      // state.audioDom.src=state.musicList[state.currentMusicIndex]; 
+      let oldSong = state.currentSong     
       state.currentSong = state.musicList[state.currentMusicIndex] // 当前播放的歌曲默认是最新添加到播放列表里的那首
-      // state.currentLyric = state.musicList[state.currentMusicIndex].lyric
+      if(state.currentSong == oldSong) return
+      state.audioDom.src= 'http://'+ state.currentSong.url[obj.data[0].id]; // 根据传进来的歌曲信息里的id拿到歌曲地址
     },
     setMusicDuration (state, obj) {
       state.musicDuration = obj.duration
@@ -133,12 +144,12 @@ let store = new Vuex.Store({
       state.musicLoadStart = obj.isloadstart
       // console.log(state.musicLoadStart,'llll')
     },
-    setCurrentTime (state, obj) {
-			state.currentTime = obj.time
+    setCurrentTime (state, time) {
+			state.currentTime = time
     },
     setProgressWidth (state) {
-			state.progerssWidth = `calc(${(this.getters.getCurrentTime / this.getters.getMusicDuration * 100).toFixed(2)}%)`; 
-    } ,/*
+			state.progressDom.style.width = `calc(${(this.getters.getCurrentTime / this.getters.getMusicDuration * 100).toFixed(2)}%)`; 
+    },/*
     clearPlayBtn(state){
       if(state.btnDom){
         state.btnDom.className = 'fa fa-pause';
@@ -162,26 +173,35 @@ let store = new Vuex.Store({
           }
         })
       }
+    },
+    setCurrentMusicIndex(state,index){
+      // 修改当前音乐的索引值
+      state.currentMusicIndex = index
+      // 当前播放的音乐根据新的索引值改变
+      state.currentSong = state.musicList[state.currentMusicIndex]
+      // 播放当前音乐
+      state.audioDom.src= 'http://'+ state.musicList[state.currentMusicIndex].url[state.musicList[state.currentMusicIndex].data[0].id]; // 根据传进来的歌曲信息里的id拿到歌曲地址
+      // 播放状态设为true
+      state.playState = true;
+    },
+    // 设置请求到的所有歌曲的歌词
+    setLyric(state,obj){
+      state.lyricData[obj.id] = obj.lyric
+    },
+    setAllPlayBtn(state,payload){
+      console.log(payload,'ppppppppppppppppppppppppp')
+      state.allPlayBtn = payload
+    },
+    // 设置当前播放的歌词
+    setCurrentLyric(state,payload){
+      state.currentLyric = payload
     }
   },
   actions:{
     sendAudio({commit,state},obj){//添加音乐播放元素，在App.vue里在模板编译完成后把audio元素发送给action
       commit('sendAudio',obj)
-    },    
-    play({commit,state}){//播放音乐
-      if(state.musicList.length!=0){
-        if (state.playState==false){
-          // state.audioDom.play();
-          commit('play'); // 提交play类型的mutation
-          // state.musicPlace=state.musicList.length-1;
-          // state.audioDom.src="http://ws.stream.qqmusic.qq.com/"+state.musicList[state.musicPlace].songid+".m4a?fromtag=46";
-          
-        }else {
-          // state.audioDom.pause();
-          commit('pause')
-        }
-      }
     },
+    // 
     sendAudio({commit,state},obj){//添加音乐播放元素，在App.vue里在模板编译完成后把audio元素发送给action
       commit('sendAudio',obj)
     },
@@ -190,10 +210,10 @@ let store = new Vuex.Store({
     },
     set_MusicDuration ({commit}, obj) {
 			commit('setMusicDuration', obj)
-    },
+    }/* ,
     set_CurrentTime ({commit}, obj) {
 			commit('setCurrentTime', obj)
-		}
+		} */
   }
 })
 export default store

@@ -29,15 +29,19 @@
                     <b>iynas hdsh hska</b><br/>
                     <div class="play-box" ref="playBox" :style="animationPlayState">
                         <img src="../../assets/img/play.png" />
-                    </div>													
+                    </div>		
+                    <div class="sentence-lyric-wrapper">
+                        <div class="sentence-lyric">
+                            {{sentenceLyric}}
+                        </div>
+                    </div>											
                 </div>
                 <scroll class="music-right" ref="lyriclist" :data="currentLyric && currentLyric.lines">
                     <div class="lyric">
-                        <ul class="lyric-box" v-if="currentLyric" ref="lyricBox">
-                            
+                        <ul class="lyric-box" v-if="currentLyric" ref="lyricBox">                            
                             <li 
                                 ref="lyricLine"
-                                v-for="val,index in currentLyric.lines"
+                                v-for="(val,index) in currentLyric.lines"
                                 :key="index.key"
                                 :class="{'currentlyc': currentLine === index}"                              
                             >{{val.txt}}</li>
@@ -71,7 +75,7 @@
                     <!--  播放模式按钮 -->
                     <i class="fl fa fa-random" aria-hidden="true"></i>
                     <!-- 上一首按钮 -->
-                    <i class="fl fa fa-backward" aria-hidden="true"></i>
+                    <i class="fl fa fa-backward" aria-hidden="true" @click="goPrev"></i>
                     <!--  播放/暂停 按钮 -->
                     <i :class="playBtnCls" aria-hidden="true" @click="play"></i>
                     <!-- 下一首按钮 -->
@@ -98,6 +102,7 @@
     import Jsonp from 'jsonp'
     import LyricParser from 'lyric-parser'
     import Base64 from '@/assets/js/base64.js'
+    import api from '@/api/api.js'
 
 
     export default{
@@ -106,20 +111,11 @@
                 mPlayerScreen:false,
                 canDrag:false,
                 persentWidth:0,
+                currentLyric:null,
                 currentLine:0,
-                // currentSong:this.$store.state.currentSong,
-                currentLyric: null,
-                currentShow:'cdImg' // 表示当前展示的是cd图片还是歌词，cd代表目前展示的是cd
-            }
-        },
-        props: {
-            currentColor: {
-			    type: String,
-                default: '#C62F2F'
-            },
-            ballWidth: {
-                type: String,
-                default: '16'
+                sentenceLyric:'',
+                currentShow:'cdImg', // 表示当前展示的是cd图片还是歌词，cd代表目前展示的是cd
+                playMode: 0
             }
         },
         components: {
@@ -130,15 +126,7 @@
             this.touch = {} // 自定义touch属性，值为对象
         },
         mounted(){
-            this.$refs.playBox.style.animationPlayState="paused"; // 一上来先使旋转的cd图片停止旋转
-            this.currentcolor = this.currentColor; // 设置进度条的颜色，不设置的话默认是'#C62F2F'
-            this.ballwidth = this.ballWidth; // 拖拽的圆圈的尺寸，默认是16px
-            this.$refs.ball.style.width = `${this.ballwidth}px`; // 设置拖拽的圆圈的尺寸
-            this.$refs.ball.style.height = `${this.ballwidth}px`;
-            this.$refs.ball.style.marginTop = `-${this.ballwidth / 2 - 1}px`; // 设置margin值使圆圈串在进度条上
-            if (!this.currentcolor.length > 0) return
-            this.$refs.currentProgress.style.background = this.currentcolor // 
-            console.log(this.currentSong,'ssssssssssssss')
+            this.$refs.playBox.style.animationPlayState="paused"; // 一上来先使旋转的cd图片停止旋转            
         },
         methods: {
             // 左右滑屏切换cd图片和歌词
@@ -171,30 +159,42 @@
                 // 滚动的距离  最大是0
                 // console.log(this.$refs.lyriclist,'this.$refs.lyriclist.style[transform]')
                 // 滑动过程中不断地计算"music-box的最左边距离页面的最左边的距离
-                // 如果当前展示的是cd图片，那么left+ deltaX就是手指横向滑动的距离，如果当前展示的是歌词，那么left是负的屏幕宽度，加上
-                const offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + deltaX)); 
-                // 计算拖动的百分比：
+                /* 计算偏移的距离：
+                    如果当前展示的是cd图片，那么left+ deltaX就是手指横向滑动的距离
+                        如果是向左滑动，那么left+ deltaX是负的，随着往左滑动，left+ deltaX不断减小，a是负的，偏移距离offsetWidth是a
+                        如果是向右滑动，那么left+ deltaX是正的，随着往右滑动，left+ deltaX不断减小，a是正的，偏移距离offsetWidth是0
+                    如果当前展示的是歌词，那么left是负的屏幕宽度，加上横向滑动的距离
+                        如果是向左滑动，那么left+ deltaX是负的，随着往a是负的，偏移距离offsetWidth是a
+                        如果是向右滑动，那么left+ deltaX是正的，a是正的，偏移距离offsetWidth是0
+                */
+                const a = Math.max(-window.innerWidth, left + deltaX); // a是 手指横向滑动的距离 和 屏幕宽度 的最大值
+                console.log(a,'a') // 向左滑动，从0到-window.innerWidth；向右滑动，从0到~
+                const offsetWidth = Math.min(0, a);
+                // console.log(offsetWidth,'offsetWidth') // 最小是-window.innerWidth，最大是0
+                // 计算拖动的百分比：偏移距离除以屏幕宽度
                 this.touch.percent = Math.abs(offsetWidth / window.innerWidth)
-                // console.log(offsetWidth,'offsetWidth')
+                
                 this.$refs.lyriclist.$el.style['transform'] = `translate3d(${offsetWidth}px,0,0)`
-                this.$refs.lyriclist.$el.style['transitionDuration'] = 0
-                this.$refs.musicCd.style.opacity = 1 - this.touch.percent
-                this.$refs.musicCd.style['transitionDuration'] = 0
+                this.$refs.lyriclist.$el.style['transitionDuration'] = 0 // 先把transition的时间清零，以免干扰运动
+                this.$refs.musicCd.style.opacity = 1 - this.touch.percent // 拖动的百分比越大，cd图片越透明，当完全展示歌词时，cd图片全透明
+                this.$refs.musicCd.style['transitionDuration'] = 0 // 把transition的时间清零，以免干扰运动
             },
+            // 手指松开时执行
             middleTouchEnd() {
+                // 如果正在运动，那么return
                 if (!this.touch.moved) {
                     return
                 }
-                let offsetWidth
-                let opacity
+                let offsetWidth // 偏移量，也就是歌词界面要通过translate运动的距离（为负，那么歌词向左运动，为正那么歌词向右运动）
+                let opacity // cd界面的透明度
                 if (this.currentShow === 'cdImg') { // 如果当前展示cd
-                    if (this.touch.percent > 0.5) {
-                        offsetWidth = -window.innerWidth
-                        opacity = 0
-                        this.currentShow = 'lyric'
-                    } else {
-                        offsetWidth = 0
-                        opacity = 1
+                    if (this.touch.percent > 0.5) { // 如果当前拖动比例大于0.5（说明拖到了歌词界面）
+                        offsetWidth = -window.innerWidth // 偏移量设置为-window.innerWidth，展示歌词界面
+                        opacity = 0 // cd界面完全透明
+                        this.currentShow = 'lyric' // 更改当前展示的状态，以便下次拖动时使用
+                    } else { // 如果当前拖动比例小于0.5（说明没有拖到歌词界面）
+                        offsetWidth = 0 // 偏移量设置为0，依然展示cd界面
+                        opacity = 1 // cd界面完全不透明
                     }
                 } else {
                     if (this.touch.percent < 0.5) {
@@ -206,14 +206,16 @@
                         opacity = 0
                     }
                 }
-                // 动画缓冲时间
-                const time = 300
+                // 设置动画缓冲时间
+                let time = 300
+                // 歌词界面移动到计算好的位置
                 this.$refs.lyriclist.$el.style['transform'] = `translate3d(${offsetWidth}px,0,0)`
                 this.$refs.lyriclist.$el.style['transitionDuration'] = `${time}ms`
                 this.$refs.musicCd.style.opacity = opacity
                 this.$refs.musicCd.style['transitionDuration'] = `${time}ms`
                 this.touch.initiated = false
             },
+            // 点击播放按钮
             play(){                
                 if(this.$store.state.playState===true){
                     this.$store.commit('pause');
@@ -223,7 +225,7 @@
                     // this.currentLyric.play()
                 }                
                 // 切换播放/暂停状态
-                this.currentLyric.togglePlay()
+                this.$store.state.currentLyric.togglePlay()
             },
             ...mapMutations({
                 setMPlayerScreen: 'setMPlayerScreen',
@@ -264,7 +266,7 @@
                 
                 // 点击或滑动 歌曲进度条 歌词滚动到对应的位置
                 if (this.currentLyric) {
-                    this.currentLyric.seek(this.$store.state.audioDom.currentTime * 1000)
+                    this.$store.state.currentLyric.seek(this.$store.state.audioDom.currentTime * 1000)
                 }
                 /* // 如果当前没有正在播放，歌词
                 if (!this.$store.state.playState) {
@@ -279,64 +281,123 @@
             handleLyric({lineNum, txt}) {
                 // 当前播放到的行的下标是lineNum
                 this.currentLine = lineNum     
-                // console.log(this.currentLine,'this.currentLine')        
+                console.log(this.currentLine,'this.currentLine')        
                 // console.log(this.$refs.lyricLine[lineNum])   
                 if (lineNum > 5) { // 如果下标大于5
                     // 获取到所有li，通过下标 找到当前播放到的歌词对应的li
-                    console.log(this.$refs.lyricLine,'lll')
                     let lineEl = this.$refs.lyricLine[lineNum]
                     // 把滚动的容器滚动到“当前li”的位置
-                console.log(lineEl,'lineEllineEllineEllineEllineEl')
                     this.$refs.lyriclist.scrollToElement(lineEl, 1000)
                 } else {
                     // 如果没有大于
-                    console.log(this.$refs.lyriclist,'this.$refs.lyriclist')
                     this.$refs.lyriclist.scrollTo(0, 0, 1000)
                 }
-                // this.playingLyric = txt
+                this.sentenceLyric = txt
             },
             getLyric(){
-                // console.log(this.$store.state.currentLyric,'lyricparser(this.$store.state.currentLyric)')
-                // this.$store.state.currentLyric是base64转码后的歌词，lyricparser是封装好的函数
-                // if(!this.$store.state.currentSong) return // 如果没有当前歌曲，就不执行下面的
-
                 let _this = this;
-                // setTimeout(function() {
-                    console.log('走到这里获取歌词')
-                    let id = _this.$store.state.currentSong.data[0].id; // 当前播放歌曲的id
-                    Jsonp(`https://api.darlin.me/music/lyric/${id}/?`,{
-                        // param:'getOneSongInfoCallback'
-                    },function(err,data){                    
-                        let oneSongLyric = data.lyric;
-                        let base = new Base64();
-                        let result = base.decode(oneSongLyric);
-                        // 使用lyric-parser模块，参考源码https://github.com/ustbhuangyi/lyric-parser/blob/master/src/index.js，
-                        _this.currentLyric = new LyricParser(result, _this.handleLyric)
-                        if (_this.$store.state.playState) {                    
-                            _this.currentLyric.play()
-                        }
-                        console.log(_this.currentLyric,'_this.currentLyric')
-                        // return _this.currentLyric
-                    })
-                // }, 1000);ssssss
+                let id = _this.$store.state.currentSong.data[0].id; // 当前播放歌曲的id
+                // lyricData时一个对象，key值是歌曲的id，value值是歌词（转码后的），如果歌词里已经有这首歌的歌词，就不再重复请求
+                if(this.$store.state.lyricData[id]){
+                    this.currentLyric = new LyricParser(this.$store.state.lyricData[id], this.handleLyric)
+                    // this.currentLyric = new LyricParser(this.getCurrentLyric,this.handleLyric)
+                    // 把包装过的歌词设置为当前播放的歌词          
+                    this.$store.commit('setCurrentLyric',this.currentLyric)
+                    // 如果当前是播放状态，就使歌词播放
+                    if (this.$store.state.playState) {                    
+                        // this.currentLyric.play()
+                        this.$store.state.currentLyric.play()                        
+                    }
+                    return
+                }
+                // Jsonp(`https://api.darlin.me/music/lyric/${id}/?`,{
+                //     // param:'getOneSongInfoCallback'
+                // },function(err,data){                    
+                //     let oneSongLyric = data.lyric;
+                //     let base = new Base64();
+                //     let result = base.decode(oneSongLyric);
+                //     _this.$store.commit('setLyric',{'id':id,'lyric':result})
+                //     // 使用lyric-parser模块，参考源码https://github.com/ustbhuangyi/lyric-parser/blob/master/src/index.js，
+                //     _this.currentLyric = new LyricParser(result, _this.handleLyric)
+                //     // 把请求到的歌词存在播放列表里的相应的歌曲对象里
+                    
+                //     if (_this.$store.state.playState) {                    
+                //         _this.currentLyric.play()
+                //     }
+                // })
+                api.getLyricData(id, this.getLyricCallBck)
+                                
+            },
+            getLyricCallBck(err,data){ 
+                let id = this.$store.state.currentSong.data[0].id; // 当前播放歌曲的id                   
+                let oneSongLyric = data.lyric;
+                let base = new Base64();
+                let result = base.decode(oneSongLyric);
+                // 把请求到的歌词存进lyricData里
+                this.$store.commit('setLyric',{'id':id,'lyric':result})
+                // 使用lyric-parser模块，参考源码https://github.com/ustbhuangyi/lyric-parser/blob/master/src/index.js，
+                this.currentLyric = new LyricParser(result, this.handleLyric)
+                // 把包装过的歌词设置为当前播放的歌词          
+                this.$store.commit('setCurrentLyric',this.currentLyric)
+                if (this.$store.state.playState) {                    
+                    this.$store.state.currentLyric.play()
+                }
+            },
+            // 播放上一首歌曲
+            goPrev(){
+                if(this.$store.state.musicList.length === 1){
+                    // 如果列表里只有一首歌曲，那么点击上一首时就循环播放这一首歌曲 
+                    this.loop()
+                }
                 
+                let index = this.$store.state.currentMusicIndex - 1;
+                if(index === -1){
+                    index = this.$store.state.musicList.length - 1;
+                }
+                // 提交setCurrentMusicIndex修改CurrentMusicIndex，立刻切换歌曲并播放
+                this.$store.commit('setCurrentMusicIndex',index)
+                this.getLyric() 
+            },
+            // 播放下一首歌曲
+            goNext(){ 
+                if(this.$store.state.musicList.length === 1){
+                    // 如果列表里只有一首歌曲，那么点击上一首时就循环播放这一首歌曲 
+                    this.loop()
+                }
+                // 通过修改公共的currentMusicIndex（当前音乐的下标）来切换歌曲
+                let index = this.$store.state.currentMusicIndex + 1
+                
+                if(index === this.$store.state.musicList.length){// 如果下标超过了列表的最大下标
+                    index = 0 // 从0开始
+                }
+                // 提交setCurrentMusicIndex修改CurrentMusicIndex，立刻切换歌曲并播放
+                this.$store.commit('setCurrentMusicIndex',index)
+                this.getLyric()                
+            },
+            // 单曲循环
+            loop(){ 
+                this.$store.commit('setCurrentTime', 0) // 时间设置为0，从0开始播放
+                this.$store.commit('play') // 提交mutation开始播放
+                if(this.currentLyric){ // 如果有歌词，歌词回到开头重新滚动
+                    this.currentLyric.seek(0)
+                }
             }
         },
         // vue官网：https://cn.vuejs.org/v2/guide/computed.html，
         //使用 watch 选项允许我们执行异步操作 (访问一个 API)，限制我们执行该操作的频率，并在我们得到最终结果前，设置中间状态
         watch: {
-            currentSong(newSong,prevSong){
+            getCurrentSong(newSong,prevSong){
                 // newSong是新歌
-                console.log(newSong,'newSongnnnnnnnnnnn');
-                console.log(prevSong,'prevSongooooooooooooo');
-                if (!newSong.data[0].id) return // 如果没有当前歌曲，就不执行下面的
-                this.getLyric() // 获取歌词
+                // if (!newSong.data[0].id) return // 如果没有当前歌曲，就不执行下面的
+                // 如果不设置延迟，会发现歌词无法滚动
+                setTimeout(() => {
+                    this.getLyric() // 获取歌词
+                }, 1000)                
             }
         },
         computed: {
             // 播放按钮的类名
-            playBtnCls(){    
-                // console.log(this.$store.state.isPlay,'this.itemData.isPlay')        
+            playBtnCls(){       
                 if(this.$store.state.playState===true){
                     return 'fl fa fa-pause-circle'
                 }else {
@@ -344,22 +405,16 @@
                 }
             },
             musicCurrentTime () {
-                return this.$store.getters.getCurrentTime ? this.$store.getters.getCurrentTime : '00:00'
+                return this.getCurrentTime ? this.getCurrentTime : '00:00'
             },
             musicDuration () {
-                return this.$store.getters.getMusicDuration ? this.$store.getters.getMusicDuration : '00:00'
+                return this.getMusicDuration ? this.getMusicDuration : '00:00'
             },
             // 进度条的宽度
             progressWidth () {
-                // if (this.$store.getters.getIsLoadStart) {
-                //     return {
-                //         'width': '0'
-                //     }
-                // } else {
-                    return {
-                        'width': `calc(${(this.$store.getters.getCurrentTime / this.$store.getters.getMusicDuration * 100).toFixed(2)}%`
-                    }
-                // }              
+                return {
+                    'width': `calc(${(this.getCurrentTime / this.getMusicDuration * 100).toFixed(2)}%`
+                }       
             },
             // 根据播放状态来计算cd图片是否旋转
             animationPlayState(){
@@ -373,10 +428,23 @@
                     }
                 }
             },
-            // 计算一下当前播放的歌曲，因为要用watch监控当前歌曲，然而当前歌曲是在公共仓库里存储（因为“当前歌曲”是点击recommend里的歌曲通过sendMusic传递过去的，组件之间通信，要作为在公共状态管理），所以在这里拿到公共的currentSong
-            currentSong(){
-                return this.$store.state.currentSong
-            }
+            // 根据状态计算播放模式的类名
+            playModeIcon(){
+                if(this.playMode === 0){
+                    return 'icon-sequence'
+                }else if(this.playMode === 1){
+                    return 'icon-loop'
+                }else if(this.playMode === 2){
+                    return 'icon-random'
+                }
+            },
+            // 用mapGetters辅助函数，使用对象展开运算符将getter混入computed对象中
+            ...mapGetters([
+                'getCurrentSong',
+                'getMusicDuration',
+                'getCurrentTime',
+                'getCurrentLyric'
+            ])
         }
     }
 </script>
@@ -452,9 +520,10 @@
         vertical-align: top;
         height:40rem;
         color: #fff;
-        margin: 12px;
-        font-size:22px;
-        overflow: auto;
+        /* margin: 0.95rem; */
+        font-size:1.7rem;
+        overflow: hidden;
+        text-align: center;
     }
     .music-player .music-box .lyric .lyric-box{
         height:100%;
@@ -462,6 +531,20 @@
     .music-player .currentlyc{
         color: seagreen;
     }
+    .sentence-lyric-wrapper{
+        width:100%;
+        margin:1.2rem auto 0 auto;
+        position: absolute;
+        top: 34rem;
+        text-align: center;
+    }
+    .sentence-lyric{
+        height: 2.4rem;
+        line-height: 2.4rem;
+        font-size: 1.8rem;
+        color: rgba(255,255,255,0.8);
+    }
+    
     /* 切换图片和歌词时小圆圈的高亮 */
     .music-player .music-box .qiehuan .active{
         background-color: salmon;
@@ -471,7 +554,7 @@
         -ms-flex: 1;
         flex: 1;
         width:34rem;
-        height: 2px;
+        height: 0.6rem;
         border-radius: 1px;
         /* background: hsla(0,0%,96%,.3); */
         margin: 0 auto;

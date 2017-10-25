@@ -63,10 +63,13 @@ export default {
 	},
     props:['itemData','index','type'],
     watch:{
+        // songImg(){
 
+        // }
     },
     computed: {
         songImg(){
+            // console.log(this.itemData.music,'mountedmountedmountedmountedmountedmountedmountedmounted')  
             // console.log(this.itemData,'this.itemData')
             /* if(!this.itemData.music){
                 this.itemData.music =

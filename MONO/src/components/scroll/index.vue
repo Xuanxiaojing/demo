@@ -37,9 +37,10 @@
       }
     },
     mounted() {
-      setTimeout(() => {        
+      // 在this.$nextTick 的回调函数中初始化 better-scroll 。因为这个时候，wrapper 的 DOM 已经渲染了，我们可以正确计算它以及它内层 content 的高度，以确保滚动正常。
+      this.$nextTick(() => {
         this._initScroll()
-      }, 20)
+      })
     },
     methods: {
       _initScroll() {
@@ -85,11 +86,9 @@
         this.scroll && this.scroll.refresh()
       },
       scrollTo() {
-        console.log(this.scroll,'this.scroll')
         this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
       },
       scrollToElement() {
-        // console.log(12333333333)
         this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
       }
     },

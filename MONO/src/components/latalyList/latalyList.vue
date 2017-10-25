@@ -11,14 +11,10 @@
                 <span class="fl">播放全部歌曲</span>
             </p>
             <ul class="music-list">
-                <li>
-                    <h2>情歌</h2>
-                    <p><span>陈珊妮</span>●来自主<em>不听歌会死</em>主题站</p>
+                <li v-for="item,index in this.$store.state.musicList" @click="selectSong(item,index)">
+                    <h2>{{item.data[0].name}}</h2>
+                    <p><span>{{item.data[0].singer[0].name}}</span>●来自主<em>不听歌会死</em>主题站</p>
                 </li>
-                <!-- <li>
-                    <h2>情歌</h2>
-                    <p><span>陈珊妮</span>●来自主<em>不听歌会死</em>主题站</p>
-                </li> -->
             </ul>					
         </div>
     </div>
@@ -29,8 +25,12 @@ import { mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
   methods: {
     ...mapMutations({
+        // 根据状态控制列表的显示和隐藏
         setLatalyListShow: 'setLatalyListShow'
-    })
+    }),
+    selectSong(item,index){
+        this.$store.commit('setCurrentMusicIndex',index);          
+    },
   }
 }
 </script>
