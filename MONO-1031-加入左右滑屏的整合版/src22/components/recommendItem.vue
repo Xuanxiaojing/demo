@@ -1,0 +1,53 @@
+<template>
+	<!-- 最外层div的类名不能确定，需要根据数据来判断添加哪个类名，在外面计算好属性传进来 -->
+	<div :class="clsName">
+		 <!-- 这里是每个推荐模块的头部 -->
+		<recommend-header></recommend-header>
+		<!-- 这里是每个推荐模块的中间部分，结构进行定制，在这里放一个插槽 -->
+		<!-- <slot name="middle-slot">
+			<div class="sign">
+				<img src="../assets/img/riqian.png" />
+			</div>
+		</slot> -->
+		<!-- <div id="m" ref="m"></div> -->
+		<recommend-middle :itemData="this.itemData" :index="this.index"></recommend-middle>
+		<!-- {{this.middleContent}} -->
+		<!-- 这里是每个推荐模块的底部 -->
+		<recommend-footer v-if="!clsName.includes('kind3')"></recommend-footer>
+	</div>
+</template>
+<script>
+import recommendHeader from '@/components/recommend-header'
+import recommendMiddle from '@/components/recommend-middle'
+import recommendFooter from '@/components/recommend-footer'
+
+export default {
+	components: {
+		recommendHeader,
+		recommendMiddle,
+		recommendFooter
+	},
+	props:['itemData','index'],
+	mounted(){
+		// this.$refs.m.innerHTML = this.middleContent
+	},
+	computed: {
+		clsName(){
+			if(this.itemData.type === '阅读'){
+				return 'kind1 same'
+			}else if(this.itemData.type === 'OWSPACE'){
+				return 'kind2 same'
+			}else if(this.itemData.type === '创意'){
+				return 'kind3 same'
+			}else if(this.itemData.type === '微信'){
+				return 'kind4 same'
+			}else if(this.itemData.type === '其他'){
+				return 'kind1 same'
+			}
+		}
+	}
+}
+</script>
+
+
+
