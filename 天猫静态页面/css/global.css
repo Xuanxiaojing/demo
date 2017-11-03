@@ -1,0 +1,244 @@
+/* CSS Document */
+/*------------header----------*/
+.header{
+	width:100%;
+	height:26px;
+	border-bottom:1px solid #e5e5e5;	
+	background:#f2f2f2;
+}
+.header_cont{
+	width:1191px;
+	height:26px;
+	margin:0 auto;	
+}
+.login{
+	padding-top:8px;	
+}
+.login .icon{
+	width:13px;
+	height:11px;
+	background-position:0 0;
+	margin-right:3px;	
+}
+.login a{
+	margin-right:20px;	
+	font-family:"宋体";
+	color:#999999;
+}
+.header_cont_nav li{
+	margin-top:8px;			
+}
+.header_cont_nav li a{
+	font-family:"宋体";
+	color:#999999;	
+}
+.header_cont_nav .li1 .icon{
+	width:6px;
+	height:3px;
+	background-position:0 -16px;
+	margin:0 17px 0 2px;	
+}
+.header_cont_nav .li2 .icon{
+	width:13px;
+	height:11px;
+	background-position:0 -23px;	
+	margin-right:3px;
+}
+.header_cont_nav .li3 .icon{
+	width:13px;
+	height:11px;
+	background-position:0 -39px;
+	margin:0 3px 0 20px;	
+}
+.header_cont_nav .li3{
+	margin-right:21px;	
+}
+.header_cont_nav .li4 .icon{
+	width:6px;
+	height:3px;
+	background-position:0 -16px;
+	margin-left:2px;	
+}
+.header_cont_nav .li5{
+	width:1px;
+	height:14px;
+	background-position:0 -55px;
+	margin:6px 14px 0 12px;	
+}
+.header_cont_nav .li6 .icon{
+	width:8px;
+	height:12px;
+	background-position:0 -75px;
+	margin-right:6px;	
+}
+.header_cont_nav .li6,.header_cont_nav .li7{
+	margin-right:20px;	
+}
+.header_cont_nav .li8 .icon{
+	width:6px;
+	height:3px;
+	background-position:0 -16px;
+	margin:0 18px 0 2px;	
+}
+.header_cont_nav .li9 b{
+	width:11px;
+	height:11px;
+	background-position:0 -92px;
+	margin-right:5px;	
+}
+.header_cont_nav .li9 i{
+	width:6px;
+	height:3px;
+	background-position:0 -16px;
+	margin:0 7px 0 2px;		
+}
+/*---头部的全屏导航条结束---*/
+
+
+/*---bottom部分开始-----*/
+.bottom{
+	width:100%;
+	height:363px;
+	background:#fff;
+	border-top:1px solid #d1d7dc;		
+}
+.bottom .i_bottom_icon{
+	background:url(../images/i_bottom_icon.png) no-repeat;	
+}
+.bottom_content{
+	width:1190px;
+	height:363px;
+	margin:0 auto;
+	position:relative;	
+}
+.bottom_top{
+	width:1190px;
+	height:101px;	
+	border-bottom:1px solid #ededed;
+	padding-top:49px;
+}
+.bottom_top .li1{
+	width:185px;
+	height:101px;
+	background:url(../images/i_bottom_icon.png) no-repeat 51px 0;
+	padding-left:117px;	
+}
+.bottom_top_dec1{
+	font-size:16px;
+	color:#1a1a1a;
+	font-weight:bold;
+	margin-top:5px;	
+}
+.bottom_top_dec2{
+	font-size:16px;
+	color:#868686;
+	margin-top:9px;	
+}
+.bottom_top .i1{
+	width:1px;
+	height:44px;
+	background-posiiton:0 -246px;
+	margin-top:7px;	
+}
+.bottom_top .li2{
+	width:198px;
+	height:101px;
+	background:url(../images/i_bottom_icon.png) no-repeat 30px -405px;
+	padding-left:98px;	
+}
+.bottom_top .li3{
+	width:198px;
+	height:101px;
+	background:url(../images/i_bottom_icon.png) no-repeat 32px -644px;
+	padding-left:99px;	
+}
+.bottom_top .li4{
+	width:171px;
+	height:101px;
+	background:url(../images/i_bottom_icon.png) no-repeat 54px -861px;
+	padding-left:121px;	
+}
+
+.bottom_bot{
+	padding-left:52px;	
+}
+.bottom_bot_list{
+	margin-top:0;	
+}
+.bottom_bot_list_d{
+	width:238px;	
+}
+.bottom_bot_list_d p{
+	font:12px "宋体";
+	color:#8b8b8b;
+	line-height:20px;	
+}
+.bottom_bot_list_d .title{
+	font:bold 16px "宋体";
+	color:#646464;
+	margin-bottom:8px;	
+}
+.bottom_bot_list .li5{
+	width:186px;	
+}
+.bottom_bot_list .li5 .i_bottom_icon{
+	width:98px;
+	height:98px;
+	background-position:0 -1560px;
+	margin-top:10px;
+}
+.bottom_content .miao{
+	display:block;
+	width:69px;
+	height:23px;
+	position:absolute;
+	left:49px;
+	top:340px;	
+	background-position:0 -1184px;
+}
+/*---bottom部分结束-----*/
+/*---footer部分开始-----*/
+
+.footer{
+	width:100%;
+	height:242px;
+	background:#000;
+	border-top:2px solid #c40000;		
+}
+.footer_content{
+	width:1191px;
+	height:224px;
+	margin:0 auto;	
+	padding-left:23px;
+	padding-top:18px;
+}
+.footer_content .cont2 .shu{
+	width:1px;
+	height:12px;
+	background-color:#b5ffb5;
+	margin:7px 6px 0 9px;	
+}
+.footer_content .cont2 .shu1{
+	margin-left:5px;	
+}
+.footer_content .cont2 .shu2{
+	margin-left:5px;	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*------------footer----------*/
