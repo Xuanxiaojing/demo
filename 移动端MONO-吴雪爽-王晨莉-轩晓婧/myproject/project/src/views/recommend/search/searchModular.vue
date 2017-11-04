@@ -1,11 +1,14 @@
 <template>
 	<div>
-		<!-- <PubNav :nav_data = "nav_data"></PubNav> -->
+		<x-header></x-header>    
+		<div v-transfer-dom>
+				<actionsheet  v-model="showMenus" show-cancel></actionsheet>
+		</div>
     <div class = "search-content">
 			<div>
 				<section class="searchList">
-					<ul id = 'movielist'>
-						 <search-item 
+					<ul id = 'movielist' class="clearfix">
+						<search-item 
 							v-for = "item,index in this.$store.state.navData" 
 							:key = "index" 
 							:item = "item" :index = "index">								
@@ -25,24 +28,35 @@
 		import SearchItem from '@/views/recommend/search/search-item'
 		import api from '@/api/api.js' // 请求数据的文件
 		import Jsonp from 'jsonp'
+		import { XHeader, Actionsheet, TransferDom} from 'vux'
+
     export default {
-			// props:["nav_data"],
+			data(){
+				return {
+					showMenus: false
+				}
+			},
+			directives: {
+        TransferDom
+      },
       components:{
-          FooterNav,
-          PubNav,
-          SearchItem
+				XHeader,
+				Actionsheet,
+				FooterNav,
+				PubNav,
+				SearchItem
       },
       mounted(){
 				let _this = this;
 				setTimeout(function() {
 					_this.getSearchData()
 				});
-},
+			},
       methods:{
         getSearchData(){
-					//消声克的救赎
+					//肖申克的救赎
 					if(this.$store.state.searchVal === ""){
-						this.$store.state.searchVal = "消声克的救赎";
+						this.$store.state.searchVal = "肖申克的救赎";
 					}
 					let currentSearchVal = this.$store.state.searchVal;	
 					let _this = this;
@@ -57,6 +71,9 @@
     }
 </script>
 <style>
+	#movielist{
+		margin-top:4rem;
+	}
 	.search-content{
 		padding:0;
 	}

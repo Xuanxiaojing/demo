@@ -39,17 +39,15 @@
                     </div>											
                 </div>
                 <scroll class="music-right" ref="lyriclist" :data="currentLyric && currentLyric.lines">
-                    <div class="lyric">
-                        <ul class="lyric-box" v-if="currentLyric" ref="lyricBox"> 
-                            <!-- <transition-group name="lyric">                            -->
+                    <div class="lyric" ref="lyricCont">
+                        <ul class="lyric-box" v-if="currentLyric" ref="lyricBox">
                             <li 
                                 ref="lyricLine"
                                 v-for="(val,index) in currentLyric.lines"
                                 :key="index"
                                 :class="{'currentlyc': currentLine === index}"                              
                             >{{val.txt}}</li>
-                            <!-- </transition-group> -->
-                            <!-- 根据 -->
+                            <!-- 根据歌词生成li，根据li的下标和currentLine状态来确定哪句歌词是“当前歌词” -->
                         </ul>						
                     </div>
                 </scroll>
@@ -132,6 +130,7 @@
             this.touch = {} // 自定义touch属性，值为对象
         },
         mounted(){
+            // this.$refs.lyriclist.$el.style.height = this.$refs.lyricCont.offsetHeight;
             this.$refs.musicPlayer.style.height = window.innerHeight
             this.musicBoxP = getComputedStyle(this.$refs.musicBox)['paddingLeft'];
             this.$refs.playBox.style.animationPlayState="paused"; // 一上来先使旋转的cd图片停止旋转            
@@ -167,15 +166,12 @@
                 const left = this.currentShow === 'cdImg' ? 0 : -window.innerWidth // 记录距离当前展示的小盒子距离屏幕左边的距离 
                 // 如果当前展示的是cd，left在手指拖动过程中一直是0
                 // 否则如果当前展示的是歌词，那么left在手指拖动过程中一直是屏幕的宽度
-                // 滚动的距离  最大是0
                 // 滑动过程中不断地计算"music-box的最左边距离页面的最左边的距离
                 /* 计算偏移的距离：
                     如果当前展示的是cd图片，那么left+ deltaX就是手指横向滑动的距离
                         如果是向左滑动，那么left+ deltaX是负的，随着往左滑动，left+ deltaX不断减小，a是负的，偏移距离offsetWidth是a
                         如果是向右滑动，那么left+ deltaX是正的，随着往右滑动，left+ deltaX不断减小，a是正的，偏移距离offsetWidth是0
                     如果当前展示的是歌词，那么left是负的屏幕宽度。加上横向滑动的距离deltaX
-                        如果是向左滑动，那么left+ deltaX是负的，随着往a是负的，偏移距离offsetWidth是a
-                        如果是向右滑动，那么left+ deltaX是正的，a是正的，偏移距离offsetWidth是0
                 */
                 const a = Math.max(-window.innerWidth, left + deltaX); // a是 手指横向滑动的距离 和 屏幕宽度 的最大值
                 // console.log(a,'a') // 如果当前展示的是cd图片，那么向左滑动，从0到-window.innerWidth；向右滑动，从0到~
@@ -295,7 +291,6 @@
                     // 获取到所有li，通过下标 找到当前播放到的歌词对应的li
                     let lineEl = this.$refs.lyricLine[lineNum-5]
                     // 把滚动的容器滚动到“当前li”的位置
-                    console.log(lineEl,'lineEl')  
                     this.$refs.lyriclist.scrollToElement(lineEl, 1000)
                 } else {
                     // 如果没有大于
@@ -310,18 +305,14 @@
                 // 每次getLyric被调用时都从state里拿歌词数据，如果歌词里已经有这首歌的歌词，就不再重复请求
                 if(this.$store.state.lyricData[id]){
                     this.currentLyric = new LyricParser(this.$store.state.lyricData[id], this.handleLyric)
-                    // this.currentLyric = new LyricParser(this.getCurrentLyric,this.handleLyric)
                     // 把包装过的歌词设置为当前播放的歌词          
                     this.$store.commit('setCurrentLyric',this.currentLyric)
-                    // 如果当前是播放状态，就使歌词播放
-                    // if (this.$store.state.playState) {                    
-                        // this.currentLyric.play()
-                        this.$store.state.currentLyric.play()                        
-                    // }
+                    // 使歌词播放
+                    this.$store.state.currentLyric.play() 
                     return
                 }
                 api.getLyricData(id, this.getLyricCallBack)
-                                
+                
             },
             getLyricCallBack(err,data){ 
                 let id = this.$store.state.currentSong.data[0].id; // 当前播放歌曲的id                   
@@ -393,13 +384,12 @@
                 if (!newSong.data[0].id) return // 如果没有当前歌曲，就不执行下面的                
                 // 防止歌词切换跳动，监测到歌曲变化时，如果当前已经有歌词，就先使歌词停止播放，再去获取新的歌词
                 if (this.currentLyric) {
-                    console.log('已经有歌词，先停止',555555555555555)
                     this.currentLyric.stop()
                 }
                 // 如果不设置延迟，会发现歌词无法滚动
                 setTimeout(() => {
                     this.getLyric() // 获取歌词
-                }, 2000)                
+                },3000)                
             }
         },
         computed: {
@@ -475,8 +465,8 @@
     } 
     /* 显示播放列表的按钮 */
     .music-title i:nth-child(1){
-        padding-left:2rem;
-        margin-right: 12.55555556rem;
+        padding-left:3rem;
+        margin-right: 11.55555556rem;
     }
     .music-title .fa-chevron-up{
         padding-left:2rem;
@@ -587,10 +577,12 @@
         flex: 1;
         width:34rem;
         height: 0.6rem;
-        border-radius: 0.2rem;
-        border-bottom: 0.5rem solid #666666;
+        border-radius: 0.5rem;
+        /* border-bottom: 0.5rem solid #666666; */
+        background-color: #666666;
         /* background: hsla(0,0%,96%,.3); */
-        margin: 0 auto;
+        margin: 1.85185185rem auto 0;
+        padding-top:0;
         font-size: 0;
         cursor: pointer;
         position: relative;
@@ -604,8 +596,8 @@
         background: #c62f2f;
     }
     .music-player .schedule .ball{
-        width: 1.4rem;
-        height: 1.4rem;
+        width: 1.6rem;
+        height: 1.6rem;
         margin-top: -0.35rem;
         position: absolute;
         background: #fff;

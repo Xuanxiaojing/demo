@@ -1,7 +1,7 @@
 <template>
     <div>
         <ul class="function clearfix">
-            <li class="fl fa fa-share-square-o" aria-hidden="true" @touchstart="show7=true">                             
+            <li class="fl fa fa-share-square-o" aria-hidden="true" @click="fn">                             
             </li>
             <li @touchstart="collect()" :class="['fa','fa-heart-o',{'red':itemData.actionBar.isCollect}]" aria-hidden="true"></li>
             <li @touchstart="liked()" :class="['fa','fa-thumbs-o-up',{'blue':itemData.actionBar.thumbsUp}]" aria-hidden="true">
@@ -11,8 +11,6 @@
                 <span>{{itemData.actionBar.comment}}</span>
             </li>
             <li class="fa fa-ellipsis-h fr lastone" aria-hidden="true" @touchstart="showPosition('bottom')"></li>
-            <actionsheet v-model="show7" :menus="menu7" theme="android" @on-touchstart-menu="click"></actionsheet>
-            <toast ref="w" v-model="showPositionValue" type="text" :time="800" text="师傅，数据被妖怪抓走了" :position="position">{{ $t('Basic Usage') }}</toast>
         </ul>        
     </div>
     
@@ -27,30 +25,17 @@
         data() {
             return {
                 isChecked: false,
-                isThumbsUp: false,
-                show7: false,
-                menu7: {
-                    menu1: this.$t('朋友圈'),
-                    menu2: this.$t('微信'),
-                    menu3: this.$t('QQ/空间'),
-                    menu4: this.$t('新浪微博'),
-                    menu5: this.$t('复制链接'),
-                    menu6: this.$t('更多分享'),
-                },
-                position: 'default',
-                showPositionValue: false
+                isThumbsUp: false
             }
         },
         props: ['itemData', 'index', 'type'],
         methods: {
+            // 提示信息的显示和隐藏
             showPosition (position) {
-                this.position = position
-                this.showPositionValue = true
-            },
-            click () { //
+                this.$store.commit('changeToastTipPosition',position)
+                this.$store.commit('changeToastShowPositionValue',true)
             },
             liked() {
-                // console.log(this.itemData)
                 this.$store.commit('changeHeartState', this.itemData)
                 if (this.$store.state.SecondData) {
                     this.$store.commit('changeHeartStateSecond', this.$store.state.ActionBarId)
@@ -61,67 +46,16 @@
                 if (this.$store.state.SecondData) {
                     this.$store.commit('changeCollectStateSecond', this.$store.state.CollectId)
                 }
+            },
+            fn(){
+                this.$store.commit('changeAlertTipShow',true)
             }
         }
     }
 </script>
 
 <style>
-    /* .weui-skin_android{
-        width: 1242px;
-        height: 1000px;
-        position: absolute;
-        top: 30%;
-        left: 0;
-    } */
-    /* .weui-skin_android .weui-actionsheet{
-        position: absolute;
-    } */
-    .function .red {
-        color: #d95f57;
-    }
 
-    .function .blue {
-        color: #a1dfe4;
-    }
-    .content .weui-mask_transparent{
-        background: rgba(0, 0, 0, 0.8);
-    }
-    .content .weui-actionsheet__menu,.content .weui-actionsheet{
-        width: 46rem;
-        left: 10%!important;
-    }
-    .content .weui-actionsheet__menu div{        
-        float: left;
-        width: 33.33%;
-        height: 1.11rem;
-        line-height: 1.11rem;
-        font-size: 1.85rem;
-        letter-spacing: 0.15rem;
-        color: #ffffff;
-        text-align: center;
-    }
-    .content .weui-actionsheet__cell:before{
-        border-top: 0;
-    }
-    .content .weui-actionsheet__menu div:nth-child(1){
-         background: url("../../../static/img/circleOfFriends.png") no-repeat center 0; 
-    }
-    .content .weui-actionsheet__menu div:nth-child(2){
-         background: url("../../../static/img/WeChat.png") no-repeat center 0; 
-    }
-    .content .weui-actionsheet__menu div:nth-child(3){
-         background: url("../../../static/img/QQ-Zone.png") no-repeat center 0; 
-    }
-    .content .weui-actionsheet__menu div:nth-child(4){
-         background: url("../../../static/img/sinamicro-blog.png") no-repeat center 0; 
-    }
-    .content .weui-actionsheet__menu div:nth-child(5){
-         background: url("../../../static/img/Copy-link.png") no-repeat center 0; 
-    }
-    .content .weui-actionsheet__menu div:nth-child(6){
-         background: url("../../../static/img/More-share.png") no-repeat center 0; 
-    }
 </style>
 
 

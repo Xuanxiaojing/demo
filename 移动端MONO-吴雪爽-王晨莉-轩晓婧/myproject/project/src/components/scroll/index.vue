@@ -45,9 +45,6 @@
       this.$nextTick(() => {
         this._initScroll()
       })
-      // setTimeout(()=>{
-      //   this._initScroll()
-      // },1000)
     },
     methods: {
       _initScroll() {
@@ -60,7 +57,6 @@
           click: this.click,
           scrollX:this.scrollX
         })
-        console.log(this.scroll)
         if (this.listenScroll) {
           let _this = this
           this.scroll.on('scroll', pos => {

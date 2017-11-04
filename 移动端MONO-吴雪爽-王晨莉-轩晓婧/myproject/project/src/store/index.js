@@ -12,8 +12,11 @@ let store = new Vuex.Store({
       i18n: vuexI18n.store  
   },
   state: {
+    alertTipShow:false, // 弹框的显示和隐藏
+    tipPosition:'default', // 提示信息的位置（定位）
+    showPositionValue:false, // 提示信息的显示和隐藏
     bookList:[],
-     searchVal:"",
+    searchVal:"",
     navData:{},//记录点击导航跳转页面获取到的数据
     dynamicState: [],//存动态的数组
     SecondData: '',
@@ -53,9 +56,17 @@ let store = new Vuex.Store({
   },
   getters,
   mutations: {
+    changeToastTipPosition(state,payload){
+      state.tipPosition = payload
+    },
+    changeToastShowPositionValue(state,payload){
+      state.showPositionValue = payload
+    },
+    changeAlertTipShow(state,payload){
+      state.alertTipShow = payload      
+    },
     changeSearchVal(state,payload){//记录搜索的内容
       state.searchVal = payload
-      //console.log(state.searchVal)
     },
     changeIco(state,payload){
       payload.attentioned = true;
@@ -128,10 +139,7 @@ let store = new Vuex.Store({
           return
         }
       }
-      // if(state.listdata.includes(payload[0])) return
-      state.listdata.push(...payload)
-      
-      // console.log(state.listdata,22222222222222222)
+      state.listdata.push(...payload)      
       state.listdata.forEach((item,index)=>{
         Vue.set(item,'isPlay',false)
       }) // 给每条数据加一个isPlay状态，控制音乐的播放和暂停           
@@ -142,16 +150,16 @@ let store = new Vuex.Store({
     setListDataMusic(state,payload){
       state.listdata.forEach(function(item1){                        
         if(item1.type === '音乐'){
-            if(!item1.music){ // 如果item1.music不存在，走到这里
-              // 这里遇到一个问题，Vue.set()的问题
-              Vue.set(item1,'music',[])
-              // item1.music = []
-            }
-            if(item1.music.includes((state.AllMusicList[state.musicIndex]))){
-              return
-            }
-            item1.music.push(state.AllMusicList[state.musicIndex]);                                     
-            state.musicIndex++;
+          if(!item1.music){ // 如果item1.music不存在，走到这里
+            // 这里遇到一个问题，Vue.set()的问题
+            Vue.set(item1,'music',[])
+            // item1.music = []
+          }
+          if(item1.music.includes((state.AllMusicList[state.musicIndex]))){
+            return
+          }
+          item1.music.push(state.AllMusicList[state.musicIndex]);                                     
+          state.musicIndex++;
         }
       })
     },
@@ -216,7 +224,6 @@ let store = new Vuex.Store({
     // 设置音乐是否正在加载
 		setMusicLoadStart (state, obj) {
       state.musicLoadStart = obj.isloadstart
-      // console.log(state.musicLoadStart,'llll')
     },
     setCurrentTime (state, time) {
 			state.currentTime = time
@@ -260,10 +267,7 @@ let store = new Vuex.Store({
     },
     set_MusicDuration ({commit}, obj) {
 			commit('setMusicDuration', obj)
-    }/* ,
-    set_CurrentTime ({commit}, obj) {
-			commit('setCurrentTime', obj)
-		} */
+    }
   }
 })
 export default store

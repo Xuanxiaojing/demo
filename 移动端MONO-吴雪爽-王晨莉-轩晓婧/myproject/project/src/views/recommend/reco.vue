@@ -1,6 +1,6 @@
 <template>
     <div>
-        <PubNav></PubNav>
+        <PubNav @alertTipShowPubNav="alertTipShowReco"></PubNav>
         <FooterNav></FooterNav>
     </div>
 </template>
@@ -12,6 +12,12 @@
         components:{
             PubNav,
             FooterNav
+        },
+        methods:{
+            alertTipShowReco(flag){
+                console.log(flag,'我reco执行了')
+                this.$emit('alertTipShowReco',flag)
+            }
         }
     }
 </script>

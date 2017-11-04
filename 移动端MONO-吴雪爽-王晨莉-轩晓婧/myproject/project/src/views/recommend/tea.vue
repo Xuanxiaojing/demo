@@ -1,14 +1,14 @@
 <template>
     <div :style="{'width': pinWidth+'px','overflow': 'hidden','float': 'left'}">
         <div style="width: 100%">
-              <Home></Home>
+            <Home></Home>
 		</div>
     </div>
         
 </template>
 
 <script>
-    import Home from '@/views/recommend/home'
+    import Home from "@/views/recommend/home";
     
     
     export default {

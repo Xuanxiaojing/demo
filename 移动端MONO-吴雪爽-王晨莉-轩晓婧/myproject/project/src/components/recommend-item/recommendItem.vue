@@ -13,7 +13,12 @@
 		<recommend-middle :itemData="this.itemData" :index="this.index" :type="type"></recommend-middle>
 		<!-- {{this.middleContent}} -->
 		<!-- 这里是每个推荐模块的底部 -->
-		<recommend-footer v-if="!clsName.includes('kind3')" :itemData="this.itemData.thisItem" :index="this.index" :type="type"></recommend-footer>
+		<recommend-footer 
+			v-if="!clsName.includes('kind3')" 
+			:itemData="this.itemData.thisItem" 
+			:index="this.index" 
+			:type="type"
+		></recommend-footer>
 	</div>
 </template>
 <script>

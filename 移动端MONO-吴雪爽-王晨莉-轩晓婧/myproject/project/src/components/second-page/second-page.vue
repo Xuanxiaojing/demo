@@ -1,15 +1,14 @@
 <template>
-  <div class="second-page">
-        <h2 class="clearfix music-title">
-            <p></p>
+  <div class="second-page" @touchmove="touchMoveFn">
+        <h2 class="clearfix music-title" ref="titleBox">
+            <p ref="titleP"></p>
             <div class="clearfix title-second">
                 <router-link tag="i" class="fl fa fa-chevron-left" aria-hidden="true" to="/"></router-link>
                 <span class="fl">{{listObj.column}}</span> 
-                <i class="fl fa fa-share-square-o" aria-hidden="true"></i>
                 <i class="fr fa fa-ellipsis-h" aria-hidden="true"></i>
             </div>					
         </h2>
-        <div class="secondImg-box">
+        <div class="secondImg-box" ref="secondImg">
             <img class="back-pic" :src="listObj.linkImg" />  
             <p class="the-subkey">
                 <mark>MONO造物主</mark><br>
@@ -44,7 +43,7 @@
             <div :class="clsName" v-for="item,index in listObj.list">
                 <div class="clearfix creater">							
                     <h2 class="fl">{{item.time}}</h2>
-                    <span class="fr">
+                    <span class="fr" @touchstart="showPosition('bottom')">
                         <i class="fa fa-link fa-rotate-90" aria-hidden="true"></i>
                         {{listObj.type}}
                     </span>
@@ -127,6 +126,20 @@
             }
         },
         methods:{
+            getRect(obj){ // 封装函数getRect，获取getBoundingClientRect
+			    return obj.getBoundingClientRect();
+            },
+            touchMoveFn(){
+                if(this.getRect(this.$refs.secondImg).top < (-this.$refs.titleBox.offsetHeight) ){ // 如果该图片距离可视区域顶部的距离小于可视区的高度，说明还没有被加载
+                    this.$refs.titleP.style.backgroundColor = 'black'
+                }else{
+                    this.$refs.titleP.style.backgroundColor = 'transparent'
+                }
+            },
+            showPosition (position) {
+                this.$store.commit('changeToastTipPosition',position)
+                this.$store.commit('changeToastShowPositionValue',true)
+            },
             getSecondData(){
                 // 如果一开始公共状态里的listdata数组不为空，说明已经有数据了，不用再重复请求（重复请求会覆盖之前的交互修改的数据）
                 if(this.$store.state.SecondData.id == this.$route.params.id){
@@ -135,7 +148,6 @@
                 }
                 api.getSecondData().then((data) => {
                     let id = this.$route.params.id
-                    // console.log(id)
                     this.$store.commit('renderSecondData',data.data.data.list[id])
                     this.$store.commit('changeHeartStateSecond',this.$store.state.ActionBarId)
                     this.$store.commit('changeCollectStateSecond',this.$store.state.CollectId)
@@ -149,4 +161,10 @@
         }
     }
 </script>
+<style>
+    /* #app .second-page .music-title p{
+        background-color: #000;
+        opacity: 0.8;
+    } */
+</style>
 

@@ -85,6 +85,35 @@ https://cn.vuejs.org/v2/guide/reactivity.html
 
 ##6.
 ###问题：
+>提醒的弹窗是用position:fixed，使其相对body定位，不随滚动条滚动，但是加上better-scroll的滚动之后，发现position:fixed失效。
+
+###原因：
+>better-scroll是通过改变transform的translate来实现滚动，父级元素如果有transform属性，会导致子元素的fixed失效
+###解决：
+>把用到position:fixed的元素移到没有transform属性的元素里，需要的数据通过组件间通信来传递
+
+##7.
+###问题：
+>提醒的弹窗是用position:fixed，使其相对body定位，不随滚动条滚动，但是加上better-scroll的滚动之后，发现position:fixed失效。
+
+###原因：
+>better-scroll是通过改变transform的translate来实现滚动，父级元素如果有transform属性，会导致子元素的fixed失效
+###解决：
+>把用到position:fixed的元素移到没有transform属性的元素里，需要的数据通过组件间通信来传递
+
+##8.
+###问题：
+>静态页面的样式一开始是写在css文件里，三人合作开发时，一些新添加的样式写在各自的组件里，合起来时发现样式有互相影响
+
+###解决：
+	<style scoped="scoped">
+		
+	</style>
+>scoped 属性是一个布尔属性。如果使用该属性，则样式仅仅应用到 style 元素的父元素及其子元素。
+
+
+##9.
+###问题：
 >在测试后台接口时，开启后台服务，前端发送请求时会报错
 ###解决：
 >在网上百度查询后得知是跨域引起的问题，添加一系列请求头，重启服务后问题解决成功拿到数据 
@@ -96,7 +125,7 @@ https://cn.vuejs.org/v2/guide/reactivity.html
 	res.header("Access-Control-Allow-Headers", "X-Requested-With"); 
 	res.header('Access-Control-Allow-Headers', 'Content-Type'); next(); })
 
-##7.
+##10.
 ###问题：
 >采用单页应用，点击头部导航栏content中对应不同的组件，由于页面中的数据要从后台请求过来，在一开始的时候把发送请求放到点击事件里，这样数据可以请求到，结构也可以正常渲染，但是一刷新页面就挂了，原因是路由中配置的是history模式，页面刷新后路径还是刷新前的路径，路径没有错但是数据没有了，引发了控制台一串报错。
 ###解决：
@@ -107,25 +136,5 @@ https://cn.vuejs.org/v2/guide/reactivity.html
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##难点：
-###1.
-首页推送的众多音乐，每首音乐有一个小播放条，点击按钮均可播放，但同一时间只能播放一首音乐，歌曲信息同步到播放器详情页
-
-###解决：
-数据驱动，每首音乐推送是由数据渲染的，在每条数据里添加isPlay状态（true或false），每个小播放条的播放状态由该状态控制
 
 

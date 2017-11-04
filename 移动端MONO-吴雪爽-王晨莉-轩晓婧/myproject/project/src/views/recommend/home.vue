@@ -9,7 +9,7 @@
                 <div class="morningtea">
                     <p>
                         <img src="../../assets/img/mortea.png" /> 
-                        <span>17.09.18</span>
+                        <span>{{morningteaTime}}</span>
                     </p>
                     <p><span>MONO今日编辑精选</span></p>
                     <div class="border"></div>
@@ -22,18 +22,11 @@
                     :index="index"
                 >                                      
                 </recommend-item>
-                    <!-- <p
-                        v-for="item,index in downdata" 
-                    >
-                        {{item.id}}          
-                    </p> -->
-                <!-- </div> -->
                 <div class="floading" v-if="reloading">
                     <img src="/static/img/pullLoding.gif" width="120" alt="">
                 </div>
             </div> 
         </div>
-        
     </div>
 </template>
 
@@ -181,7 +174,6 @@ export default {
     getOneSongDataCallBack(err, data) {
       // 这里获取的data是单个歌曲的数据，包括url和id
       this.$store.commit("setAllMusicList", data); // 把拿到的每首歌曲的信息存放到公共的AllMusicList数组里
-      console.log("我请求道首页歌曲数据了");
       this.nextTick();
     },
     ...mapMutations({
@@ -189,6 +181,11 @@ export default {
     })
   },
   computed: {
+    morningteaTime(){
+      let d = new Date()
+      let y = ''+d.getFullYear()
+      return y.slice(2) + '.' + (d.getMonth()+1) + '.' + d.getDate()
+    },
     listdata() {
       return this.$store.state.listdata; // 下拉更新数据存放数组
     },
@@ -198,9 +195,12 @@ export default {
   }
 };
 </script>
-<style scoped="scoped">
+<style>
 #wrapper {
   float: left;
+}
+.morningtea p:nth-child(1) span{
+  font-size: 3.96rem;
 }
 .content {
   padding-top: 0;
@@ -219,6 +219,13 @@ export default {
 .floading {
   text-align: center;
   height: 3.7rem;
+}
+ .function .red {
+    color: #d95f57;
+}
+
+.function .blue {
+    color: #a1dfe4;
 }
 </style>
 

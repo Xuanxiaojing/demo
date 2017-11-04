@@ -1,58 +1,55 @@
 <template>
-  <div class="cummunity">
-        <div class="club">
-            <h2 class="fl">社区</h2>
-            <i class="fa fr fa-plus" aria-hidden="true"></i>
-        </div>
-        <div class="seek">
-            <input type="text" value="搜索你感兴趣的内容"/>
-            <i class="fa fa-search" aria-hidden="true"></i>					
-        </div>
-        <div class="special">
-            <h2 class="clearfix more">
-                <span class="fl">热门小组、活动</span>
-                <span class="fr">
-                    <router-link tag="a" to="/Un">查看全部</router-link>
-                </span>
-            </h2>
-            <scroll>
-                <div class="theme clearfix">
-                    <div v-for="item in this.$store.state.comunityData.hotActive" @touchstart="showPosition('top')">
-                        <img :src="item" />
-                        <!-- <p class="same-title">24小时电影院</p>
-                        <p class="person-num"><span>1234</span>人</p> -->
-                    </div>                
+    <div>
+        <scroll ref="contentWrapper">
+            <div class="cummunity">
+                <div class="club">
+                    <h2 class="fl">社区</h2>
+                    <i class="fa fr fa-plus" aria-hidden="true"></i>
                 </div>
-            </scroll>
-            <toast v-model="showPositionValue" type="text" :time="800" text="玩脱了，页面找不到了" :position="position"></toast>
-        </div>
-        <div class="more-groups">
-            <h3>我参加的小组和活动</h3>
-            <p @touchstart="showPosition('middle')">还美参加任何小组和活动，点我发现更多<br>/^-^/</p>
-        </div>
-        <!-- <div class="slideshow">
-            <img src="img/show1.png" />
-            <div class="circle">
-                <div class="white"></div>
-                <div></div>
+                <div class="seek">
+                    <input type="text" value="搜索你感兴趣的内容"/>
+                    <i class="fa fa-search" aria-hidden="true"></i>					
+                </div>
+                <div class="special">
+                    <h2 class="clearfix more">
+                        <span class="fl">热门小组、活动</span>
+                        <span class="fr">
+                            <router-link tag="a" to="/Un">查看全部</router-link>
+                        </span>
+                    </h2>
+                    <scroll>
+                        <div class="theme clearfix">
+                            <div v-for="item in this.$store.state.comunityData.hotActive" @click="showPosition('top')">
+                                <img :src="item" />
+                                <!-- <p class="same-title">24小时电影院</p>
+                                <p class="person-num"><span>1234</span>人</p> -->
+                            </div>                
+                        </div>
+                    </scroll>
+                    <toast v-model="showPositionValue" type="text" :time="800" text="玩脱了，页面找不到了" :position="position"></toast>
+                </div>
+                <div class="more-groups">
+                    <h3>我参加的小组和活动</h3>
+                    <p @click="showPosition('middle')">还美参加任何小组和活动，点我发现更多<br>/^-^/</p>
+                </div>
+                <div class="slideshow">
+                    <slide-show :imgList="imgList"></slide-show>
+                </div>
+                <div class="diff-theme">
+                    <scroll>
+                        <div class="theme clearfix">
+                            <div  v-for="item in this.$store.state.comunityData.comunityTheme" @click="showPosition('bottom')">
+                                <img :src="item" />
+                                <!-- <p class="same-title">24小时电影院</p>
+                                <p class="person-num"><span>1234</span>人</p> -->
+                            </div>
+                        </div>
+                    </scroll>
+                </div>	            		
             </div>
-        </div> -->
-        <div class="slideshow">
-            <slide-show :imgList="imgList"></slide-show>
-        </div>
-        <div class="diff-theme">
-            <scroll>
-                <div class="theme clearfix">
-                    <div  v-for="item in this.$store.state.comunityData.comunityTheme" @touchstart="showPosition('bottom')">
-                        <img :src="item" />
-                        <!-- <p class="same-title">24小时电影院</p>
-                        <p class="person-num"><span>1234</span>人</p> -->
-                    </div>
-                </div>
-            </scroll>
-        </div>	
-        <Footer-nav></Footer-nav>			
-    </div>
+        </scroll>
+        <Footer-nav></Footer-nav>
+    </div>	
 </template>
 
 <script>
@@ -88,6 +85,7 @@
             }
         },
         mounted() { 
+            this.$refs.contentWrapper.$el.style.height = window.innerHeight + "px";
             this.getComunityData()
         },
         computed: {
