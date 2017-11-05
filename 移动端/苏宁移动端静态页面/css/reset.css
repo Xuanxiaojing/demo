@@ -1,0 +1,80 @@
+/* CSS Document */
+body,h1,h2,h3,h4,h5,h6,p,dl,dd{
+	margin:0;
+	font-weight:normal;
+	font-size:12px;
+	font-family:"Helvetica";
+	line-height:1;
+}
+body{
+	background:#fff;	
+}
+a{
+	text-decoration:none;
+	color:inherit;	
+}
+ul,ol{
+	list-style:none;
+	margin:0;
+	padding:0;	
+}
+b,strong{
+	font-weight:normal;	
+}
+i,em{
+	font-style:normal;	
+}
+mark{
+	background:none;
+	color:inherit;	
+}
+img{
+	vertical-align:top;
+	border:0;	
+}
+.fl{
+	float:left;	
+}
+.fr{
+	float:right;
+}
+.clearfix:after{
+	content:"";
+	display:block;
+	clear:both;
+	height:0;
+	overflow:hidden;
+}
+.clearfix{
+	zoom:1;	
+}
+
+input,fieldset,textarea,select{
+	padding:0;
+	border:0;
+	background:none;
+	margin:0;
+	vertical-align:top;
+	resize: none;
+	outline:none;
+}
+
+a,
+input,
+button {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+input,
+button {
+	-webkit-appearance: none;
+	border-radius: 0;
+}
+body {
+	-webkit-user-select:none;
+	-webkit-text-size-adjust: 100%;
+}
+body * {
+	-webkit-user-select:none;
+	font-family:Helvetica;
+	box-sizing: border-box;
+}
