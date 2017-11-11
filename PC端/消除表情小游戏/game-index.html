@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Game_main</title>
+<link rel="stylesheet" href="style/Game_main.css">
+<style>
+	.content {
+		-overflow: hidden;
+	}
+</style>
+</head>
+<body>
+	<div id="wrap">
+		<div class="head">
+			<div id="log"></div>
+			<h3 class="title">你的鼠标有多快?</h3>
+			<p class="explain">游戏说明：“点击游戏”，随机掉下表情点中它，千万别让它掉下去！！</p>
+		</div>
+		<div class="content">
+			<div class="win">
+				<span class="winNum">0分</span>
+				<p>得分</p>
+			</div>
+			<div class="lose">
+				<span class="loseNum">0分</span>
+				<p>失分</p>
+			</div>
+			<a href="javascript:;" class="btn">开始游戏</a>
+			<img src='img/1.png' id="runImg" style="position: absolute;left:0;top:-54px;">
+		</div>
+	
+	</div>
+	<script src="./js/utils.js"></script>
+	<script>
+		var arr = ['img/1.png','img/3.png','img/4.png','img/5.png','img/6.png'];  //存放小图片地址
+		var start = $('.btn')[0];  //获取点击按钮
+		var winScore = $('.win')[0];
+		var loseScore = $('.lose')[0];
+		var content = $('.content')[0];  //获取游戏区域
+		var img = $('#runImg');  //装小图片的img
+		var winNum = $('.winNum')[0];  //得分
+		var loseNum = $('.loseNum')[0];  //失分
+		var w = 0;  //记录得分
+		var l = 0; //记录失分
+		var timer = null;
+		var time = 2000;  //mTween里运动的时间
+		
+		function animImg(){
+			time -= 100;   //随着animImg不断地执行，mTween运动的时间越来越小，小图片越掉越快
+			//2.开始之后，开始往下掉小图标
+			img.style.top = '-54px';//每次执行animImg，一开始都使小图片回到顶部
+			var randomSrc = Math.round((Math.random()*4)); //随机生成0~4之间的随机数，用来随机取数组arr里的图片地址
+			img.onload = function(){  //等图片加载完成后再获取图片的高度才准确
+				var target = content.clientHeight - img.offsetHeight;  //运动到的目标位置的top值是窗口的高减去运动的小图片的高
+				var randomLeft = Math.round((Math.random()*(content.clientWidth-img.offsetWidth)+6));  //随机生成小图片的定位left值
+				img.style.left = randomLeft + 'px';  //随机出现在游戏区域的任何位置
+				mTween(img,{top:target},time,'linear',function(){  //走到这里说明小图片已经到了底部，不需要额外使用状态去判断
+					img.style.top = '-54px';//使小图片回到顶部
+					//如果运动到底部，说明小图片没有被点击,整个窗口抖动
+					shake(content,'top',40,function(){    //抖完之后
+						l++;  //失分+1
+						loseNum.innerHTML = l + '分';
+						//如果失分达3分，结束游戏
+						if(l == 5){
+							clearInterval(img.timer);
+							mTween(winScore,{left:14},400,'linear');  //得分归位
+							mTween(loseScore,{left:14},400,'linear'); //失分归位
+							mTween(start,{bottom:20},400,'linear',function(){  //start归位
+								mTween(start,{opacity:1},200,'linear');
+								start.innerHTML = '重新开始';
+								w = 0;  //得分归0
+								l = 0;  //失分归0
+								winNum.innerHTML = w +'分';
+								loseNum.innerHTML = l + '分';
+								time = 2000;  //重置初始的运动时间
+							});
+							return;  //游戏结束，就不再执行以下的代码
+						};
+						animImg();  //再次执行animImg往下掉图片
+					}); 
+				}); 
+			}
+			img.src = arr[randomSrc];  //装入图片
+		}
+		//1.点击开始按钮，开始按钮淡出，分数记录移出
+		start.onclick = function(){
+			mTween(winScore,{left:-90},200,'linear');
+			mTween(loseScore,{left:-90},200,'linear');
+			mTween(start,{bottom:0,opacity:0},200,'linear',animImg);  //注意是start消失之后再执行animImg
+		}
+		//2.点小图片
+		img.onmousedown = function(){
+			clearInterval(this.timer);  //小图片停止运动
+			img.src = 'img/bad.png';  //换成哭脸图片,开始抖动
+			shake(img,'left',20,function(){  //抖完之后得分，图片消失（回到顶部藏起来）
+				w++;  //得分+1
+				winNum.innerHTML = w +'分';
+				animImg();  //再次执行animImg往下掉图片
+			});
+		};
+		
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+
+
+
+	</script>
+	</body>
+	</html>
+	<!-- <script src="js/Game_main.js"></script> -->
+	<!-- 
+	1. 点击开始游戏  动画
+	2. 让这个img随机的到一个src地址，并且left随机计算（0-框框width-img的width）
+	3. 让img运动 目标是框框height-img的height
+	4. 运动过程中点中了：
+			img抖动 抖完之后
+				top为0 left随机算出，src随机得到一个地址
+				让img运动 目标是框框height-img的height
+			img抖动 抖完之后
+				top为0 left随机算出，src随机得到一个地址
+				让img运动 目标是框框height-img的height
+	
+	5. 运动过程中没有点中了：
+			框框抖动，抖动之后
+				img的top为0 left随机算出，src随机得到一个地址
+				让img运动 目标是框框height-img的height
+			框框抖动，抖动之后
+				img的top为0 left随机算出，src随机得到一个地址
+				让img运动 目标是框框height-img的height
+	
+	
+	 -->

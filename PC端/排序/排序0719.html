@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			i{
+				font-style: normal;
+				
+			}
+			button{
+				outline: none;
+			}
+			div{
+				box-sizing: border-box;
+			}
+			.box{
+				width:1000px;
+				height: 700px;
+				background: url(images/logo.png) no-repeat 54px 93px,url(images/bg.png) no-repeat;
+				margin:100px auto;
+				padding-top: 137px
+			}
+			.top{
+				margin-left: 314px;
+			}
+			.top button{
+				width:148px;
+				height: 38px;
+				border: 1px solid #887abc;
+				border-radius: 20px;
+				margin-right: 60px;
+			}
+			.content{
+				margin: 60px 0 0 104px;
+			}
+			.cont{
+				float: left;
+				width:150px;
+				height: 150px;
+				position: relative;
+				margin:0px 60px 73px 0;
+				text-align: center;
+				line-height: 150px;
+				font-size: 30px;
+				color: #fff;
+				font-family: "century gothic";
+			}
+			.cont i{
+				position: absolute;
+				left: 20px;
+				bottom: -15px;
+				width:110px;
+				height: 30px;
+				background: #fff;
+				border-radius: 20px;
+				text-align: center;
+				line-height: 30px;
+				color: #000;
+				font-size: 14px;
+				color:#6a54a0;
+			}
+			.top .active{
+				background:#332d52;
+				color:#fff;
+			}
+			
+		</style>
+	</head>
+	<body>
+		
+		<div class="box">
+			<div class="top">
+				<button>从小到大</button>
+				<button>打乱顺序</button>
+			</div>
+			<div class="content">
+				<!--<div class="cont">
+					<span>One</span>
+					<i>1-粉红</i>
+				</div>
+				<div class="cont">
+					<span>One</span>
+					<i>1-粉红</i>
+				</div>
+				<div class="cont">
+					<span>One</span>
+					<i>1-粉红</i>
+				</div>
+				<div class="cont">
+					<span>One</span>
+					<i>1-粉红</i>
+				</div>
+				<div class="cont">
+					<span>One</span>
+					<i>1-粉红</i>
+				</div>
+				<div class="cont">
+					<span>One</span>
+					<i>1-粉红</i>
+				</div>
+				<div class="cont">
+					<span>One</span>
+					<i>1-粉红</i>
+				</div>
+				<div class="cont">
+					<span>One</span>
+					<i>1-粉红</i>
+				</div>
+			</div>-->
+		</div>
+		
+		
+		<script src="./js/utils.js"></script>
+		
+		<script>
+			
+			var content = document.getElementsByClassName('content')[0];
+			
+			var conts = document.getElementsByClassName('cont');
+			var arr = [0,1,2,3,4,5,6,7];
+			
+			var arrTxt1 = ['One','Two','Three','Four','Five','Six','Seven','Eight']
+			var arrTxt2 = ['1-粉红','2-粉黄','3-黄绿','4-嫩绿','5-湖蓝','6-蓝紫','7-粉紫','8-紫红']
+			
+			//封装一个函数，作用是根据数组arr生成相应的html结构
+			function creatHtml(arr){
+				var html = '';
+				for(var i=0; i<arr.length; i++){
+					
+					html += `
+							<div class="cont" style="background:url(images/logo2.png) center center no-repeat,url(images/cont-${arr[i]+1}.png);">
+								<span>${arrTxt1[arr[i]]}</span>
+								<i>${arrTxt2[arr[i]]}</i>
+							</div>
+					`;
+				}
+				return html;
+			}
+			
+			content.innerHTML = creatHtml(arr);
+			
+			
+			//点击排序按钮，进行排序
+			var sort = $('.top button')[0];  //排序按钮
+			sort.className = 'active';
+			sort.onclick = function(){
+				random.className = '';
+				this.className = 'active';
+				var newArr = arr.sort(function(a,b){
+					return a - b;  
+				});
+				content.innerHTML = creatHtml(newArr);
+			}
+			
+			
+			var random = $('.top button')[1];  //随机打乱的按钮
+			random.onclick = function(){
+				sort.className = '';
+				this.className = 'active';
+				var newArr = arr.sort(function(a,b){
+					return Math.random() - 0.5;
+				});
+				
+				content.innerHTML = creatHtml(newArr);
+			}
+			
+			
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>todos</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <script src="../vue/vue.js"></script>
+</head>
+
+<body>
+    <section class="todoapp">
+        <div>
+            <header class="header" >
+                <h1>todos</h1>
+                <input 
+                    class="new-todo" 
+                    placeholder="请输入内容" 
+                    v-model="todo" 
+                    @keydown.enter="addTodo"
+                >
+                <!-- v-model写在输入框里，作用是：渲染value值  监控oninput事件 -->
+            </header>
+            <section class="main" v-show="list.length">
+                <!-- list.length为0，布尔值是false，section隐藏如果length不是0，布尔值是true，section显示 -->
+                <input class="toggle-all" type="checkbox" v-model = "isAllSelected">
+                <!-- 
+                    v-model写在checkbox里的作用是监控点击事件，渲染checked属性，isAllSelected是true就选中，否则不选中 
+                    用原生的思路：1.判断列表里是不是去哪都选中，有一个不选中就不是全选……  2。如果全选，列表里每条都选中……
+                    不要在模板中写过多的逻辑，把逻辑抽离在计算属性中，直接使用计算属性isAllSelected
+                -->
+                <ul class="todo-list">
+                    <li v-bind:class="{completed:item.selected,editing:edit === item}" v-for="item,index in list">
+                        <!-- 点击label时，调用函数eidtTodo，把item传进去，函数eidtTodo内部把edit的值改为item，
+                            在这里对比 如果edit和item是同一个，说明这个item就是被点击的元素对应的数据，数据改变vue会自动渲染结构
+                            一开始edit的值是‘’，不添加类名，点击label调用eidtTodo后，edit变成item，vue会自动渲染结构，把item对应的li加上edting类名
+                        -->
+                        <div class="view">
+                            <input class="toggle" type="checkbox" v-model="item.selected">
+                            <!-- item.selected改变会影响单选框的选中，单选框的选中会影响item.selected的值 -->
+                            <!-- item是list数组里的对象，我们想要的是对象里的title属性的属性值 -->
+                            <label @dblclick="eidtTodo(item)">{{item.title}}</label>
+                            <!-- 双击label，执行eidtTodo函数， -->
+                            <button class="destroy" @click="deleteTodo(index)"></button>
+                        </div>
+                        <input 
+                            class="edit"
+                            v-model="item.title"
+                            @blur="editDone(item,index)"
+                            @keydown.13="editDone(item,index)"
+                            @keydown.esc="cancelEdit(item)"
+                        >
+                        <!-- 
+                            编辑框触发onkeydown事件：
+                                按enter键：编辑完成，使this.edit = '',edit改变了，会用到edit的地方会响应改变，li将会没有editing类名
+                                编辑框失去焦点：编辑完成，同上
+                                按esc键：放弃编辑，把之前的存的值给到title（因为一旦在编辑框输入内容，item.title就会改变，所以要提前存一下原来的value值）
+                         -->
+                        <!-- v-model是双向绑定，item.title就根据输入框的value响应改变，结构里用到item.title的地方全都响应改变 ;item.title改变，输入框的value改变，结构响应改变-->
+                    </li>  
+                </ul>
+            </section>
+            <footer class="footer" v-show="list.length">
+                <!-- list里有数据footer显示，没有数据就隐藏 -->
+	            <span class="todo-count">
+	            	<strong>{{noSelectedNum}}</strong>
+	            	<span>条未选中</span>
+                </span>
+                <!-- <ul class="filters">
+                    <li>
+                        <a href="#all" 
+                            :class="{selected:dataType=='all'}">
+                         All
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#active" 
+                            :class="{selected:dataType=='active'}">
+                         Active
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#completed" 
+                            :class="{selected:dataType=='completed'}">
+                         Completed
+                        </a>
+                    </li>
+                </ul>
+                <button class="clear-completed" @click="clearCompleted">
+                    Clear completed
+                </button> -->
+            </footer>
+        </div>
+    </section>
+
+    <!-- <script src="./js/index.js"></script> -->
+
+    <script>
+        
+        //先设计一套数据，所展示的每一条信息对应一个对象，有可描述性和可扩展性
+        /* let data=[
+            {
+                id:'1',
+                title:'今天星期一',
+                selected:false
+            },
+            {
+                id:'2',
+                title:'今天放假',
+                selected:false
+            }
+        ]; */
+        
+        //一开始从localStorage里拿数据
+        let data = localStorage.getItem('todolist');
+        
+        if(data){//如果localStorage里有数据
+            data = JSON.parse(data)
+        }else{
+            data=[];
+        }
+
+        new Vue({
+            el:'.todoapp',
+            data:{
+                //data放在list里，待会儿循环list渲染结构
+                list:data,
+                todo:'',//随着输入内容，自动响应
+                edit:'',//存的是当前正在编辑的那条数据（是一个对象）
+                titleEditBefore:''
+            },
+            //保留之前的数据，把数据存在localStorage里，在添加时要存一次，重命名要存一次，只要数据改变，都要往localStorage重新存一遍新数据，比较麻烦
+            //用watch监控属性值，一旦属性值发生变化立马执行对应的函数
+            watch:{
+                list:{
+                    deep:true, //watch默认是浅监控，所以要手动变为深监控
+                    handler(){
+                        //监控到list里有变化，就往localStorage重新存一遍
+                        localStorage.setItem('todolist',JSON.stringify(this.list));
+                    }
+                }
+            },
+            computed:{
+                //属性的值是函数的返回值
+                //找到被选中的元素
+                //selectedItems不是一个函数，而是函数的返回值
+                selectedItems(){
+                    return this.list.filter(function(item){
+                        return item.selected;
+                    });
+                },
+                //判断是否全选
+                /* isAllSelected(){
+                    return this.selectedItems.length == this.list.length;
+                }, */
+                //判断是否全选
+                isAllSelected:{
+                    //取值
+                    get(){//点击每条todo时，触发get()
+                        console.log('取值');
+                        return this.selectedItems.length == this.list.length;
+                    },
+                    //设置值
+                    //因为全选按钮和isAllSelected双向绑定了（v-model="isAllSelected"），所以当点击全选按钮时，isAllSelected会改变，会触发set函数
+                    set(newState){//点击全选按钮时，触发set()
+                        console.log('设置值')
+                        //接收的newState是true或false，当选中全选按钮时，newState为true，否则是false
+                        console.log(newState);                       
+                        //this.isAllSelected = newState;//不要在计算属性里设置计算属性的值，会形成死递归
+                        //通过改变data里的属性的值来间接改变
+                        //循环list数组，把所有数据的selected属性值改为newState,list改变了，会自动渲染页面
+                        this.list.forEach(function(element) {                           
+                            element.selected = newState;
+                        });
+                    }
+                },
+                //没有选中的个数
+                noSelectedNum(){
+                    return this.list.length - this.selectedItems.length;
+                }
+            },
+            methods:{
+                addTodo(){
+                    this.list.push({
+                        id:Math.random(),
+                        title:this.todo,
+                        selected:false
+                    });                   
+                    this.todo='';            
+                },
+                deleteTodo(index){
+                    console.log(11111)
+                    this.list.splice(index,1);
+                },
+                eidtTodo(item){
+                    this.edit = item;//记录传进来的数据（是当前正在编辑的数据），每次调用这个函数，都会存以下，一旦this.edit发生变化，vue就会自动重新渲染结构
+                    this.titleEditBefore = item.title;//刚进入编辑状态时，存一下此时的title
+                },
+                editDone(item,index){
+                    //编辑完成
+                    //如果title为空，就删除该项
+                    if(item.title == ''){
+                        //改变list
+                        this.list.splice(index,1);
+                    }
+                    //不管title是不是空，都退出编辑状态
+                    this.edit="";//通过操作eidt这个属性的值，来影响结构，edit为‘’，结构自动重新渲染，li没有edting类名，退出编辑状态                   
+                },
+                //取消编辑
+                cancelEdit(item){
+                    item.title = this.titleEditBefore;
+                    this.edit = '';
+                }
+            }
+        })
+
+    </script>
+
+</body>
+
+</html>
