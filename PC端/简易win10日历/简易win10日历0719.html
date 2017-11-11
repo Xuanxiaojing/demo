@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			h2{
+				font-weight: normal;
+			}
+			h2,p{
+				margin: 0;
+				padding: 0;
+			}
+			.box{
+				width:460px;
+				margin:0 auto;
+				background: rgba(0, 0, 0, 0.7);
+			}
+			.box_top{
+				height:97px;
+				border-bottom: 1px solid #77776f;
+				padding: 15px 0 0 25px;
+			}
+			.now-time{
+				font-size: 40px;
+				color: #fff;
+				font-family: "微软雅黑";
+				margin-bottom:10px;
+			}
+			.date-now{
+				color: rgb(141, 214, 237);;
+			}
+			.calendar{
+				width: 460px;
+				height:495px;
+				//padding :0px 0 20px 25px;
+				padding-bottom: 20px;
+				position: relative;
+				transform-style: preserve-3d;
+				perspective-origin: center center;
+				perspective: 1000px;
+				overflow: hidden;
+			}
+			.date-month{
+				width: 400px;
+				height: 66px;
+				padding:0 34px 0 26px;
+			}
+			.cur-month{
+				color: #ccc;
+				font: 16px/66px Arial;
+				float: left;
+				height: 100%;
+			}
+			.set-month{
+				width: 88px;
+				float: right;
+				height: 100%;
+			}
+			.set-month a, .cur-month{
+				cursor: default;
+			}
+			.prev,.next{
+				display: inline-block;
+				width:16px;
+				height: 9px;
+			}
+			.prev{
+				float: left;
+				background: url(images/prev.png) no-repeat;
+				margin: 28px 26px 0 0;
+			}
+			.next{
+				float: right;
+				background: url(images/next.png) no-repeat;
+				margin-top: 28px;
+			}
+			.date-dates{
+				width:460px;
+				height:410px;
+				transition:.5s;
+				position:absolute;
+				top:0;
+				bottom:0;
+				left:0;
+				right:0;
+				margin:auto;
+			}
+			.date-days, .date-nums{
+				width: 455px;
+				height: 55px;
+				padding-left:5px;
+				position: absolute;
+				top:0;
+				left: 0px;
+			}
+			.date-nums{
+				width:455px;
+				height:354px;
+				padding-left:5px;
+				top:55px;
+			}
+			.date-days span, .date-nums span{
+				float: left;
+				width: 60px;
+				height: 55px;
+				border: 2px solid rgba(0,0,0,0);
+				text-align: center;
+				color: #fff;
+				line-height: 55px;
+				cursor: default;
+			}
+			.date-days span:hover, .date-nums span:hover{
+				border-color: #ccc;
+			}
+			.current-day{
+				background: rgb(141, 214, 237);
+			}
+			.date-nums span.other-month-date{
+				color: #ccc;
+			}
+			.box .gray{
+				color: #999;
+			}
+			
+			.month,.date-year{
+				box-sizing: border-box;
+				
+				width:230px;
+				height: 205px;
+				/*position: absolute;
+				top:50px;
+				left: 0;
+				padding:30px;*/
+				opacity: 0;
+				/*transition:1s;
+				z-index:-999;*/
+				position:absolute;
+				top:0;
+				bottom:0;
+				left:0;
+				right:0;
+				margin:auto;
+			}
+			.month div,.date-year div{
+				box-sizing: border-box;
+				width:25%;
+				height:25%;
+				float: left;
+				text-align: center;
+				line-height: 100px;
+				color: #fff;
+				border: 2px solid rgba(0,0,0,0);
+			}
+			.month div:hover,.date-year div:hover{
+				border-color: #ccc;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="box">
+			<div class="box_top">
+				<h2 class="now-time"></h2>
+				<p class="date-now">2017年7月18日</p>
+			</div>
+			
+			<div class="calendar">
+				<div class="date-month">
+					<div class="cur-month">xxxx年xx月</div>
+					<div class="set-month">
+						<a href="javascript:;" class="prev"></a>
+						<a href="javascript:;" class="next"></a>
+					</div>
+				</div>
+				
+				<div class="date-dates">
+					<div class="date-days">
+						<span>一</span>
+						<span>二</span>
+						<span>三</span>
+						<span>四</span>
+						<span>五</span>
+						<span>六</span>
+						<span>日</span>
+					</div>
+					
+					<div class="date-nums">
+						<!--<span></span>-->
+					</div>
+				</div>
+				
+				<div class="month">
+					<!--<div>1月</div>
+					<div>2月</div>
+					<div>3月</div>
+					<div>4月</div>
+					<div>5月</div>
+					<div>6月</div>
+					<div>7月</div>
+					<div>8月</div>
+					<div>9月</div>
+					<div>10月</div>
+					<div>11月</div>
+					<div>12月</div>-->
+				</div>
+				
+				<div class="date-year">
+					<div>1</div>
+					<div>2</div>
+					<div>3</div>
+					<div>4</div>
+					<div>5</div>
+					<div>6</div>
+					<div>7</div>
+					<div>8</div>
+					<div>9</div>
+					<div>10</div>
+					<div>11</div>
+					<div>12</div>
+				</div>
+				
+			</div>
+			
+		</div>
+		
+		<script src="./utils.js"></script>
+		<script>
+			
+			var dateNums = document.querySelector(".date-nums");
+			var curMonth = document.querySelector('.cur-month');   //显示当前切换到的年月日
+			
+			var prev = document.querySelector(".prev"); // 上一个月
+			var next = document.querySelector(".next");  // 下一个月
+			var n = 0;
+			
+			next.onclick  =function (){
+				if(isClick){
+					mTween(date_month,{
+						top:-600
+					},410);
+					return;
+				}
+				n++;
+				func(n);
+				//console.log(n)
+				
+			}
+			
+			prev.onclick  =function (){
+				if(isClick){
+					return;
+				}
+				n--;
+				func(n);
+			}
+			//console.log(n)
+			func(n);  //刚一上来n=0，显示真实的年月日
+			function func(n){
+				//console.log(n)
+				var now = new Date();
+				var nowMonth = now.getMonth();  // 此时此刻的真实月份
+				var nowDate = now.getDate();    //此时此刻的真实月份 对应的日期
+				
+				var newDate = new Date();   //newDate
+				
+				newDate.setMonth(now.getMonth()+n);  //newDate身上的月份设置为用户切换到的当前月份
+				
+				var currentYear = newDate.getFullYear();  //用户切换到的当前月份 对应的年月日
+				var currentMonth = newDate.getMonth();
+				var currentDate = newDate.getDate();
+				
+				curMonth.innerHTML = currentYear + '年'+ (currentMonth+1) + '月';
+				
+				
+				var d = new Date();  //再获取一次此时此刻的真实时间
+				d.setMonth(newDate.getMonth()+1);  //d身上的月份设置为当前月份的“下个月”
+				d.setDate(0);  // 又设置到了“上个月的最后一天”，也就是本月的最后一天
+				var totalDate = d.getDate();
+				
+				//当前月的1号是周几
+				var d1 = new Date();
+				d1.setMonth(newDate.getMonth());  //把d1身上的月份设置为用户切换到的当前月
+				d1.setDate(1);  //把d1的日期设置为1号，得到当前月的1号
+				var currentDay = d1.getDay();
+				
+				var prevSpanNum = currentDay === 0 ? 6 : currentDay - 1;  //计算前面有多少个span
+				
+				// 上一个月有多少天，上一个月最后一天是几号
+				var d2 = new Date();
+				d2.setMonth(newDate.getMonth());
+				d2.setDate(0);
+				var prevMonthDate = d2.getDate();
+				
+				var html = '';
+				
+				for( var i = 0; i < prevSpanNum; i++ ){
+					html = `<span class="gray">${prevMonthDate-i}</span>` + html;
+				}
+				
+				
+				for( var i = 1; i <= totalDate; i++ ){
+					if(i === nowDate && currentMonth === nowMonth){
+						html += `<span class="current-day">${i}</span>`
+					}else{
+						html += `<span>${i}</span>`
+					}
+				}
+				
+				//最后几个空span，显示下个月的前几天
+				for( var i = 1; i <= 42-(prevSpanNum+totalDate); i++ ){
+					html += `<span class="gray">${i}</span>`
+				}
+				
+				
+				
+				dateNums.innerHTML = html;
+				return currentYear;
+				//return newDate;
+			}
+			
+			
+			var nowTime = $('.box_top .now-time')[0];
+			getNowTime();  //一上来先调用一下
+			setInterval(getNowTime,1000);  //通过定时器不断地更新时间
+			function getNowTime(){
+				var d3 = new Date();
+				var strTime = null;
+				
+				var hours = d3.getHours(); 
+				var minute = d3.getMinutes(); 
+				var second = d3.getSeconds();
+				strTime = addZero(hours) + ':' + addZero(minute) + ':' + addZero(second);  //将时分秒存在字符串strTime里
+				//console.log(strTime)
+				nowTime.innerHTML = strTime;
+			}
+			
+			//月份选择
+			
+			
+			
+			var date_month = document.querySelector('.month');
+			var date_dates = document.querySelector('.date-dates')
+			date_month.style.opacity = 0;
+			
+			var date_year = document.querySelector('.date-year');
+			
+			
+			
+			//点击时，如果月份date_month已经显示出来(true)，那么切换年份，如果是false，那么切换出月份
+			/*	如果月份date_month已经显示出来(true)，那么切换年份，
+			 * 	如果是false，那么切换出月份
+			 * 	
+			 */
+			
+			//生成.month的结构
+			var monthHtml = '';
+			
+			for(var i=1; i<=12; i++){
+				
+				monthHtml += `<div>${i}月</div>`
+			}
+			for(var i=1; i<=4; i++){
+				monthHtml += `<div class="gray">${i}月</div>`
+			}
+			date_month.innerHTML = monthHtml;
+			
+			
+			
+			//生成.date-year的结构
+			
+			var yearHtml = '';
+			
+//			for()
+			
+			var isClick = 0;  //记录curMonth被点击的次数
+			curMonth.onclick = function(){
+				//date_month.style.display = 'block';
+				//date_month.style.display = 'block';
+				isClick++;
+				if(isClick == 1){
+					date_dates.style.transform = 'translateZ(-1000px)';
+					mTween(date_dates,{
+						opacity:0,
+					},100);  
+					
+					date_month.style.zIndex = 1;  //为了不被缩小的date_dates盖住
+					mTween(date_month,{
+						opacity:1,
+						width:460,
+						height:410,
+					},100);
+					//date_month.style.transform = 'translateZ(0px)';
+					
+//					date_month.style.cssText = 'width:0;height:0;display:block';
+//					mTween(date_month,{
+//						width:460,
+//						height:410,
+//						opacity:1
+//					},600);
+					
+					//点击curMonth切换到显示月份时，curMonth变为只显示当前年份（用户切换到的年份）
+					var now = new Date();
+					var nowMonth = now.getMonth();  // 此时此刻的真实月份
+					var nowDate = now.getDate();    //此时此刻的真实月份 对应的日期
+					
+					var newDate = new Date();   //newDate
+					
+					newDate.setMonth(now.getMonth()+n);  //newDate身上的月份设置为用户切换到的当前月份
+					
+					var currentYear = newDate.getFullYear();  //用户切换到的当前月份 对应的年月日
+					
+					curMonth.innerHTML = currentYear + '年';
+					
+				}else{
+					if(isClick == 2){
+						mTween(date_month,{
+							width:0,
+							height:0,
+							opacity:0
+						},600);
+						date_year.style.cssText = 'width:0;height:0;display:block';
+						mTween(date_year,{
+							width:460,
+							height:410,
+							opacity:1
+						},600);
+					}
+				}
+				
+			}
+			
+			
+			//点击哪个月份，就跳转到哪个月份
+			//如果切换到2018年，那么点击1月，要令实参=6，点2月 实参=7  点3月  实参=8  12月  实参=17
+			//获取当前月对应的
+			var months = $('.month div');
+			
+			for(var i=0; i<months.length; i++){
+				months[i].index = i;
+				months[i].onclick = function(){
+					var now = new Date();
+					var nowMonth = now.getMonth();  // 此时此刻的真实月份
+					//var a = func(-(nowMonth)+this.index);
+					var a = func(n);
+					console.log(n)
+					console.log(a)
+					//nowMonth.setMonth(this.index-6)
+					func(-(nowMonth)+this.index+(a-2017)*12);
+					mTween(date_month,{
+						width:0,
+						height:0,
+						opacity:0
+					},300);
+					date_dates.style.transform = 'translateZ(0)';
+					mTween(date_dates,{
+						width:460,
+						height:410,
+						opacity:1
+					},300);
+					
+					isClick = isClick-1;
+					
+				}
+			}
+			
+			
+			
+			
+			
+//			months[0].onclick = function(){
+//				var now = new Date();
+//				var nowMonth = now.getMonth();  // 此时此刻的真实月份
+//				func(n-6);
+//				mTween(date_month,{
+//					width:0,
+//					height:0,
+//					opacity:0
+//				},300);
+//				date_dates.style.transform = 'translateZ(0)';
+//				mTween(date_dates,{
+//					width:460,
+//					height:410,
+//					opacity:1
+//				},300)
+//			};
+			
+			//n=0时7月（此时此刻的真实月份）。1月，n-6-0   2月：n-5
+			/*  
+			 * 
+			 * -6  1
+			 * -5  2
+			 * -4  3
+			 * -3  4
+			 * -2  5
+			 * -1  6
+			 * 0  2017-7
+			 * 1 2017-8
+			 * 2 2017-9
+			 * 3 2017-10
+			 * 4 2017-11
+			 * 5 2017-12
+			 * 6 2018-1
+			 * 
+			 * 
+			 * 
+			 * 17 2018-12
+			 * 18 2019-1
+			 * 
+			 * 
+			 * 
+			 */
+			
+			
+			
+		</script>
+		
+		
+	</body>
+</html>
