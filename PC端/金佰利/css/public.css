@@ -1,0 +1,29 @@
+/* CSS Document */
+
+.fl{
+	float:left;	
+}
+.fr{
+	float:right;
+}
+.clearfix:after{
+	content:"";
+	display:block;
+	clear:both;
+	height:0;
+	overflow:hidden;
+}
+.clearfix{
+	zoom:1;	
+}
+.sanjiao{
+	
+}
+.auto{
+	margin:0 auto;	
+}
+
+
+.jinbaili_icon{
+	background:url(../images/jinbaili_icon.png) no-repeat;	
+}

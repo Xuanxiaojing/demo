@@ -1,0 +1,161 @@
+/* CSS Document */
+
+.menu{
+	width:980px;
+	height:46px;
+	background:#d5e5f2;
+	margin:0 auto;	
+	position:relative;
+	margin-bottom:27px;
+}
+.menu .title{
+	font-size:16px;
+	color:#045fba;
+	line-height:48px;
+	text-indent:16px;	
+}
+.menu_dec{
+	position:absolute;
+	top:19px;
+	left:315px;	
+}
+.menu_dec li{
+	margin-right:5px;
+		
+}
+.menu_dec li a{
+	width:105px;
+	height:32px;
+	color:#fcfff6;	
+	line-height:32px;
+	text-align:center;
+	background:url(../images/l_menu_dec_bg.png) repeat-x;
+}
+.menu_dec li .s1,.menu_dec li .s2,.menu_dec li .s1_1,.menu_dec li .s2_1{
+	width:10px;
+	height:32px;		
+}
+.menu_dec li .s1{
+	background:url(../images/l_menu_dec_l.png) no-repeat;	
+}
+.menu_dec li .s1_1{
+	background-position:0 -88px;
+	display:none;	
+}
+.menu_dec li .s2{
+	background:url(../images/l_menu_dec_r.png) no-repeat;	
+}
+.menu_dec li .s2_1{
+	background-position:0 -122px;
+	display:none;
+	
+}
+.menu_dec li a:hover{
+	color:#005dc6;	
+}
+.menu_dec li a:hover .s1_1{
+	display:block;	
+}
+.menu_dec li a:hover .s2_1{
+	display:block;	
+}
+.menu_dec li a:hover .s1{
+	display:none;	
+}
+.menu_dec li a:hover .s2{
+	display:none;	
+}
+.menu_dec li a:hover{
+	display:block;	
+	background:url(../images/d_menu_dec_bg.png) repeat-x;
+}
+
+
+.maincontent{
+	width:980px;
+	margin:0 auto;	
+}
+.jianjie{
+	width:935px;
+	height:217px;
+	background:url(../images/d_jianjie.png);
+	margin:0 auto 20px;
+	padding:43px 0 0 45px;
+}
+.jianjie .txt_title .c{
+	font-size:20px;
+	color:#00519d;	
+	margin-bottom:11px;
+}
+.jianjie .txt_title .e{
+	font-size:18px;
+	color:#66a5ec;	
+	margin-bottom:23px;
+}
+.jianjie .txt_det{
+	font-family:"宋体";
+	color:#5d5d5d;
+	line-height:18px;	
+	margin-bottom:27px;
+}
+.content{
+	width:980px;
+	margin:0 auto;	
+	overflow:hidden;
+}
+.content_l{
+	position:relative;	
+	width:670px;
+}
+.content_l .image_dec{
+	width:340px;
+	height:346px;
+	position:absolute;
+	top:0;
+	left:300px;	
+	padding-top:54px;
+}
+.content_l .image_dec p{
+	line-height:18px;	
+}
+.content_l .image_dec .p1{
+	margin-bottom:23px;	
+}
+.content_l .image_dec .p2{
+	margin-bottom:24px;	
+}
+.content_l .image_dec .p3{
+	text-align:right;	
+}
+.content_l .image_dec p a{
+	font-family:"宋体";
+	color:#5d5d5d;	
+}
+
+
+.content_r{
+	width:303px;
+	padding-top:54px;
+	padding-bottom:10000px;
+	margin-bottom:-10000px;	
+}
+.content_r .tw{
+	width:273px;
+	height:67px;
+	background:url(../images/d_content_r_line.png) no-repeat left bottom;
+	margin:0 15px;	
+}
+.content_r .tw .image{
+	margin-right:15px;
+}
+.content_r .tw .image_dec{
+	width:182px;
+	line-height:16px;
+	color:#5d5d5d;
+	padding-top:7px;
+}
+
+
+
+
+

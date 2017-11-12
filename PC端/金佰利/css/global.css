@@ -1,0 +1,149 @@
+/* CSS Document */
+/*-----header开始*/
+.icon{
+	background:url(../images/img_d.png) no-repeat;	
+}
+.header{
+	width:100%;
+	height:101px;
+		
+}
+/*-----header_content开始*/
+.header_content{
+	width:980px;
+	height:101px;
+	margin:0 auto;	
+}
+.header .logo{
+	width:165px;
+	height:55px;
+	padding:18px 0 28px 12px;	
+}
+.logo .icon{
+	width:165px;
+	height:55px;
+	background-position:0 -258px;	
+}
+.header_nav{
+	margin:18px 29px 0 135px;	
+}
+.header_nav .txt{
+	margin:6px 14px 0 13px;	
+	font-weight:bold;
+	color:#787878;
+}
+.header_nav li .icon{
+	width:1px;
+	height:22px;
+	background-position:0 0;	
+}
+
+.header_content .tel{
+	color:#497cc4;	
+}
+.header_content .tel .bt{
+	margin:15px 0 13px 17px;	
+}
+.tel .bt_txt{
+	font-size:14px;
+	padding-top:3px;
+	font-weight:bold;	
+}
+.tel .icon{
+	width:23px;
+	height:19px;
+	background-position:0 -24px;
+	margin-right:4px;	
+}
+.tel .shouji,.tel .guhua{
+	font-size:12px;	
+	line-height:17px;
+}
+/*-----header_content结束-----*/
+/*-----header结束----*/
+/*---底部导航条和商标部分*/
+.main_bot_bot{
+	width:980px;
+	margin:0 auto;
+	margin-top:46px;	
+}
+.main_bot_bot .fr img{
+	margin-right:17px;	
+}
+.main_bot_bot .fr .margin_r0{
+	margin-right:0;	
+}
+.main_bot_bot_nav{
+	padding-top:9px;
+}
+.main_bot_bot_nav .txt{
+	margin:2px 14px 0 13px;	
+	color:#787878;
+}
+.main_bot_bot_nav li .icon{
+	width:1px;
+	height:22px;
+	background-position:0 -198px;	
+}
+
+
+/*footer部分*/
+.footer{
+	width:100%;
+	height:74px;	
+}
+.footer_content{
+	width:980px;
+	height:53px;
+	border-top:1px solid #d0d0d0;
+	margin:0 auto;	
+}
+.footer_l{
+	color:#898989;	
+	margin-top:21px;
+}
+.footer_l .p1{	
+	margin-bottom:7px;
+}
+.footer_l .p2{	
+	margin-bottom:32px;
+}
+
+.footer_r_nav .map{
+	width:41px;
+	height:22px;
+	background-position:0 -216px;	
+	margin-right:4px;
+}
+.footer_r_nav .shu{
+	width:1px;
+	height:16px;
+	background-position:0 -240px;	
+}
+.footer_r_nav .txt{
+	margin:2px 10px 0 9px;	
+}
+.footer_r{	
+	margin-top:24px;
+}
+.footer_r a{
+	color:#898989;	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*------------footer----------*/
