@@ -1,0 +1,13 @@
+.maincont_wrap,.top_content,.foot_content,.tuijian,.head_content{
+	width:1180px;
+}
+.maincont_cont{
+	width:1180px;
+	height:1850px;
+}
+.tuijian{
+	width:1180px;
+}
+.free,.css{
+	display:none;
+}

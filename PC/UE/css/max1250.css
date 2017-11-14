@@ -1,0 +1,19 @@
+.maincont_wrap,.top_content,.foot_content,.tuijian,.head_content{
+	width:880px;
+}
+.maincont_cont{
+	width:880px;
+	height:2482px;
+}
+.ui,.muban,.free,.css{
+	display:none;
+}
+.tuisong{
+	display:none;
+}
+.head_l .navl{
+	display:none;
+}
+.navl2{
+	display:block;
+}

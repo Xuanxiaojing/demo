@@ -1,0 +1,10 @@
+.maincont_wrap,.top_content,.foot_content,.tuijian,.head_content{
+	width:580px;
+}
+.maincont_cont{
+	width:580px;
+	height:3746px;
+}
+.ui,.muban,.free,.css{
+	display:none;
+}
