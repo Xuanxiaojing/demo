@@ -1,0 +1,30 @@
+/* CSS Document */
+.fl{
+	float:left;	
+}
+.fr{
+	float:right;
+}
+.clearfix:after{
+	content:"";
+	display:block;
+	clear:both;
+	height:0;
+	overflow:hidden;
+}
+.clearfix{
+	zoom:1;	
+}
+
+.auto{
+	margin:0 auto;	
+}
+.icon{
+	background:url(../images/icon.png) no-repeat;
+}
+.songti{
+	font-family: "宋体";
+}
+.marginr0{
+	margin-right:0;
+}
