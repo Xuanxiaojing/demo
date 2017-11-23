@@ -1,0 +1,113 @@
+body *{
+	box-sizing:border-box;
+}
+.box{
+	width:32rem;
+	background-color:pink;
+}
+.top{
+	width:32rem;
+	height:4.95rem;
+	border-bottom:1px solid #b2b2b2;
+	background-color:#ef3239;
+	font-size:1.5rem;
+	position:fixed;
+	top:0;
+	left:0;
+}
+.top a{
+	color:#848689;
+}
+.top .a1{
+	width:4.95rem;
+	height:4.95rem;
+	background:url(../images/i1.png) no-repeat;
+	background-size:1.55rem 1.15rem;
+	background-origin:content-box;
+	padding:1.85rem 0 1.9rem 1.8rem;
+	margin-right:8rem;
+}
+.top .a2{
+	width:6.1rem;
+	height:4.95rem;
+	background:url(../images/suo.png) no-repeat 0 1.85rem;
+	background-size:0.85rem 1.1rem;
+	line-height:4.7rem;
+	color:#fff;
+	font-size:1.7rem;
+	text-indent:1.65rem;
+}
+.top .a3{
+	width:4.95rem;
+	height:4.95rem;
+	background:url(../images/shuaxin.png) no-repeat 1.85rem 1.6rem;
+	background-size:1.35rem 1.5rem;
+}
+
+.content_top{
+	height:4.45rem;
+	background-color:#fcfcfc;
+	line-height:4.25rem;
+	border-bottom:1px solid #cccccc;
+	position:fixed;
+	top:4.95rem;
+	left:0;
+}
+.content_top a{
+	width:8rem;
+	height:4.45rem;
+	color:#848689;
+	font-size:1.5rem;
+}
+.content_top .a1{
+	text-indent:1.55rem;
+	background:url(../images/jian.png) no-repeat 4.95rem 1.75rem;
+	background-size:1.55rem 0.9rem;
+	color:#f23838;
+	background-size:1.55rem 0.9rem;
+}
+.content_top .a2{
+	text-align:center;
+}
+.content_top .a3{
+	text-indent:1.95rem;
+	background:url(../images/sanjiao1.png) no-repeat 5.4rem 1.7rem,url(../images/sanjiao2.png) no-repeat 5.4rem 2.35rem;
+	background-size:0.7rem 0.35rem/0.7rem 0.35rem;
+}
+.content_top .a4{
+	text-indent:1.6rem;
+	background:url(../images/loudou.png) no-repeat 4.95rem 1.45rem;
+	background-size:1.55rem 1.55rem;
+}
+
+body{
+	padding-top:9.4rem;
+}
+.content_cont dl{
+	height:12rem;
+	background-color:#f8f8f8;
+	padding:1rem 0 1rem 1rem;
+	border-bottom:1px solid #cccccc;
+}
+.content_cont img{
+	width:10rem;
+	height:10rem;
+}
+.content_cont .image_dec{
+	font-size:1.2rem;
+	padding-left:1.55rem;
+}
+.content_cont .jieshao{
+	line-height:1.9rem;
+}
+.content_cont .jiage{
+	margin-top:2.1rem;
+	font-size:1.65rem;
+	color:#f23838;
+	margin-bottom:0.95rem;
+}
+.content_cont .pinglun{
+	font-size:1.2rem;
+	color:#808080;
+}
+
